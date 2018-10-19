@@ -8,3 +8,7 @@
     git config --global user.email "davidchanturia13@gmail.com"
     git init ../online_arena
     
+    git pull origin master
+    git commit -am "commit message"
+    git push origin master
+    
