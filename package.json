@@ -1,0 +1,23 @@
+{
+  "name": "online_arena",
+  "version": "1.0.0",
+  "description": "# github commands for me:     # github setup     sudo apt-get install git     git config --global user.name \"dchan13\"     git config --global user.email \"davidchanturia13@gmail.com\"     git init ../online_arena",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dchan13/OnlineArena.git"
+  },
+  "author": "Data Chanturia",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dchan13/OnlineArena/issues"
+  },
+  "homepage": "https://github.com/dchan13/OnlineArena#readme",
+  "dependencies": {
+    "ejs": "^2.6.1",
+    "express": "^4.16.4"
+  }
+}

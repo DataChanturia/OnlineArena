@@ -1,0 +1,8 @@
+<h1> This is challenges page! </h1>
+
+<% for(var i = 0; i < challenges.length; i++) { %>
+    <div>
+        <h4><%= challenges[i].name %></h4>
+        <img src="<%= challenges[i].coverImage %>">
+    </div>
+<% } %>
