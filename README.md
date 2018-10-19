@@ -9,6 +9,7 @@
     
     # github daily
     git pull origin master
-    git commit -am "commit message"
+    git add --all
+    git commit -m "commit message"
     git push origin master
     

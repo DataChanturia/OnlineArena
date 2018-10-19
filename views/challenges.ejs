@@ -1,3 +1,5 @@
+<% include partials/header %>
+
 <h1> This is challenges page! </h1>
 
 <% for(var i = 0; i < challenges.length; i++) { %>
@@ -6,3 +8,5 @@
         <img src="<%= challenges[i].coverImage %>">
     </div>
 <% } %>
+
+<% include partials/footer %>
