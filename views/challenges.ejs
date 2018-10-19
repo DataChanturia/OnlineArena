@@ -1,12 +1,28 @@
 <% include partials/header %>
 
-<h1> This is challenges page! </h1>
+<div class="container">
+    <header class="jumbotron">
+        <div class="container">
+            <h1>Welcome To OnlineArena</h1>
+            <p>View all challenges & participate!</p>
+            <p>
+                <a class="btn btn-primary btn-lg" href="/challenges/new">Add new challenge</a>
+            </p>
+        </div>
+    </header>
 
-<% for(var i = 0; i < challenges.length; i++) { %>
-    <div>
-        <h4><%= challenges[i].name %></h4>
-        <img src="<%= challenges[i].coverImage %>">
+    <div class="row text-center" style="display: flex; flex-wrap: wrap;">
+        <% for(var i = 0; i < challenges.length; i++) { %>
+            <div class='col-md-3 col-sm-6'>
+                <div class="img-thumbnail">
+                    <img style="width:100%;" src="<%= challenges[i].coverImage %>">
+                    <div class='caption'>
+                        <h4><%= challenges[i].name %></h4>
+                    </div>
+                </div>
+            </div>
+        <% } %>
     </div>
-<% } %>
+</div>
 
 <% include partials/footer %>
