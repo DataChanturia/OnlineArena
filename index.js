@@ -2,25 +2,33 @@
 var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
+var mongoose = require("mongoose");
 
+mongoose.connect("mongodb://localhost/online_arena")
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 
-var challenges = [
-        {name: "Beauty Challenge", coverImage: "https://marketplace.canva.com/MACQTpJkr5Q/1/0/thumbnail_large/canva-turquoise-pink-circles-beauty-parlor-cover-MACQTpJkr5Q.jpg"},
-        {name: "Logo Challenge", coverImage: "https://cdn1.logocore.com/wp-content/uploads/2018/07/06171225/ckwdesigner-thirty-day-logo-challenge-2200x2200.jpg"},
-        {name: "Presidentz", coverImage: "https://mediaplanet.azureedge.net/images/318/53018/social-2016-trump-hil.jpg"},
-        {name: "Beauty Challenge", coverImage: "https://marketplace.canva.com/MACQTpJkr5Q/1/0/thumbnail_large/canva-turquoise-pink-circles-beauty-parlor-cover-MACQTpJkr5Q.jpg"},
-        {name: "Logo Challenge", coverImage: "https://cdn1.logocore.com/wp-content/uploads/2018/07/06171225/ckwdesigner-thirty-day-logo-challenge-2200x2200.jpg"},
-        {name: "Presidentz", coverImage: "https://mediaplanet.azureedge.net/images/318/53018/social-2016-trump-hil.jpg"}];
-        
+
+//SCHEMA SETUP
+var challengeSchema = new mongoose.Schema({
+    name: String,
+    coverImage: String
+});
+
+var Challenge = mongoose.model("Challenge", challengeSchema);
 
 app.get("/", function(req, res){
     res.render("landing");
 });
 
 app.get("/challenges", function(req, res){
-    res.render("challenges", {challenges: challenges});
+    Challenge.find({}, function(err, allChallenges){
+       if(err){
+           console.log(err);
+       } else {
+           res.render("challenges", {challenges: allChallenges});
+       }
+    });
 });
 
 app.get("/challenges/new", function(req, res){
@@ -32,9 +40,13 @@ app.post("/challenges", function(req, res){
     var name = req.body.name;
     var coverImage = req.body.coverImage;
     var newChallenge = {name: name, coverImage: coverImage};
-    challenges.push(newChallenge);
-    // redirect to challenges
-    res.redirect("/challenges");
+    Challenge.create(newChallenge, function(err, newlyCreated){
+        if(err){
+            console.log(err);
+        } else {
+            res.redirect("/challenges");
+        }
+    });
 });
 
 
