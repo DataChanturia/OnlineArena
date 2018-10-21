@@ -1,11 +1,12 @@
 
 var express = require("express");
 var app = express();
-var bodyParser = require("body-parser");
-var mongoose = require("mongoose");
 
-mongoose.connect("mongodb://localhost/online_arena")
+var mongoose = require("mongoose");
+var bodyParser = require("body-parser");
+
 app.use(bodyParser.urlencoded({extended: true}));
+mongoose.connect("mongodb://localhost/online_arena");
 app.set("view engine", "ejs");
 
 
@@ -14,9 +15,9 @@ var challengeSchema = new mongoose.Schema({
     name: String,
     coverImage: String
 });
-
 var Challenge = mongoose.model("Challenge", challengeSchema);
 
+// ROUTING GOES HERE
 app.get("/", function(req, res){
     res.render("landing");
 });
@@ -49,7 +50,7 @@ app.post("/challenges", function(req, res){
     });
 });
 
-
+// SERVER START LISTENING TO IP/PORT
 app.listen(process.env.PORT, process.env.IP, function() {
     console.log("OnlineArena Server Started!");
 });
