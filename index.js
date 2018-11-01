@@ -31,7 +31,7 @@ app.get("/challenges", function(req, res) {
             console.log(err);
         }
         else {
-            res.render("index", { challenges: allChallenges });
+            res.render("challenges/index", { challenges: allChallenges });
         }
     });
 });
@@ -55,7 +55,7 @@ app.post("/challenges", function(req, res) {
 
 // NEW route -> shows form to create new challenge
 app.get("/challenges/new", function(req, res) {
-    res.render("new");
+    res.render("challenges/new");
 });
 
 // SHOW route -> shows more info about challenge
@@ -67,7 +67,48 @@ app.get("/challenges/:id", function(req, res) {
         else {
             console.log(foundChallenge);
             // render show template with that challenge
-            res.render("show", { challenge: foundChallenge });
+            res.render("challenges/show", { challenge: foundChallenge });
+        }
+    });
+});
+
+// ===================
+// == COMMENT ROUTES =
+// ===================
+app.get("/challenges/:id/comments/new", function(req, res) {
+    // find challenge by ID
+    Challenge.findById(req.params.id, function(err, challenge) {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.render("comments/new", { challenge: challenge });
+        }
+    });
+});
+
+app.post("/challenges/:id/comments", function(req, res) {
+    // lookup challenge using ID
+    Challenge.findById(req.params.id, function(err, challenge) {
+        if (err) {
+            console.log(err);
+            res.redirect("/challenges");
+        }
+        else {
+            // create new comment
+            // connect new comment to challenge
+            Comment.create(req.body.comment, function(err, comment) {
+                if (err) {
+                    console.log(err);
+                }
+                else {
+                    challenge.comments.push(comment);
+                    challenge.save();
+                    // redirect to challenge show page
+                    res.redirect("/challenges/" + challenge._id);
+                }
+            });
+            res.render
         }
     });
 });

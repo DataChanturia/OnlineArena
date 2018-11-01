@@ -1,4 +1,4 @@
-<% include partials/header %>
+<% include ../partials/header %>
 
 <h1><%= challenge.name %></h1>
 
@@ -6,10 +6,14 @@
 
 <p><%= challenge.description %></p>
 
+<p>
+    <a class="btn btn-success" href="/challenges/<%= challenge._id %>/comments/new">Add New Comment</a>
+</p>
+
 <% challenge.comments.forEach(function(comment){ %>
     <p>
         <strong><%= comment.author %></strong> - <%= comment.text %>
     </p>
 <% }) %>
 
-<% include partials/footer %>
+<% include ../partials/footer %>
