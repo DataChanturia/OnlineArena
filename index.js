@@ -17,6 +17,7 @@ seedDB();
 app.use(bodyParser.urlencoded({ extended: true }));
 mongoose.connect("mongodb://localhost/online_arena");
 app.set("view engine", "ejs");
+app.use(express.static(__dirname + "/public"))
 
 //======================================== routing section
 // ROUTING GOES HERE
