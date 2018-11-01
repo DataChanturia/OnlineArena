@@ -5,8 +5,10 @@ var app = express();
 var mongoose = require("mongoose");
 var bodyParser = require("body-parser");
 
-var Challenge = require("./models/challenge");
-    // Comment = require("./models/comment"),// User = require("./models/user");
+//======================================== DB section
+var Challenge = require("./models/challenge"),
+    Comment = require("./models/comment");
+// User = require("./models/user");
 
 var seedDB = require("./seeds");
 seedDB();
@@ -15,7 +17,6 @@ seedDB();
 app.use(bodyParser.urlencoded({ extended: true }));
 mongoose.connect("mongodb://localhost/online_arena");
 app.set("view engine", "ejs");
-
 
 //======================================== routing section
 // ROUTING GOES HERE
@@ -59,11 +60,12 @@ app.get("/challenges/new", function(req, res) {
 
 // SHOW route -> shows more info about challenge
 app.get("/challenges/:id", function(req, res) {
-    Challenge.findById(req.params.id, function(err, foundChallenge) {
+    Challenge.findById(req.params.id).populate("comments").exec(function(err, foundChallenge) {
         if (err) {
             console.log(err);
         }
         else {
+            console.log(foundChallenge);
             // render show template with that challenge
             res.render("show", { challenge: foundChallenge });
         }

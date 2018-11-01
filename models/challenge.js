@@ -4,7 +4,8 @@ var mongoose = require("mongoose");
 var challengeSchema = new mongoose.Schema({
     name: String,
     coverImage: String,
-    description: String
+    description: String,
+    comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }]
 });
 
 module.exports = mongoose.model("Challenge", challengeSchema);
