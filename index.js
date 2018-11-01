@@ -5,21 +5,15 @@ var app = express();
 var mongoose = require("mongoose");
 var bodyParser = require("body-parser");
 
+var Challenge = require("./models/challenge"),
+    Comment = require("./models/comment"),
+    User = require("./models/user");
+
 
 //======================================== setup section
 app.use(bodyParser.urlencoded({ extended: true }));
 mongoose.connect("mongodb://localhost/online_arena");
 app.set("view engine", "ejs");
-
-
-//======================================== db/schema setup section
-//SCHEMA SETUP
-var challengeSchema = new mongoose.Schema({
-    name: String,
-    coverImage: String,
-    description: String
-});
-var Challenge = mongoose.model("Challenge", challengeSchema);
 
 
 //======================================== routing section
