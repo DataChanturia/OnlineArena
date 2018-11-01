@@ -5,10 +5,11 @@ var app = express();
 var mongoose = require("mongoose");
 var bodyParser = require("body-parser");
 
-var Challenge = require("./models/challenge"),
-    Comment = require("./models/comment"),
-    User = require("./models/user");
+var Challenge = require("./models/challenge");
+    // Comment = require("./models/comment"),// User = require("./models/user");
 
+var seedDB = require("./seeds");
+seedDB();
 
 //======================================== setup section
 app.use(bodyParser.urlencoded({ extended: true }));
