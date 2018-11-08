@@ -26,7 +26,7 @@ function seedDB() {
             console.log(err);
         }
         console.log("removed challenges!");
-
+        
         // add some challenges
         data.forEach(function(seed) {
             Challenge.create(seed, function(err, challenge) {
@@ -35,7 +35,7 @@ function seedDB() {
                 }
                 else {
                     console.log("added new campground");
-
+        
                     // add some comments
                     Comment.create({ text: "This challenge looks awesome!", author: "Nemo" }, function(err, comment) {
                         if (err) {

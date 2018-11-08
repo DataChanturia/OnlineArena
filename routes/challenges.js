@@ -16,12 +16,16 @@ router.get("/", function(req, res) {
 });
 
 // CREATE route -> creates new challenge
-router.post("/", function(req, res) {
+router.post("/", isLoggedIn, function(req, res) {
     // get data from form + add to array
     var name = req.body.name;
     var coverImage = req.body.coverImage;
     var desc = req.body.description;
-    var newChallenge = { name: name, coverImage: coverImage, description: desc };
+    var author = {
+        id: req.user._id,
+        username: req.user.username
+    };
+    var newChallenge = { name: name, coverImage: coverImage, description: desc, author: author };
     Challenge.create(newChallenge, function(err, newlyCreated) {
         if (err) {
             console.log(err);
@@ -33,7 +37,7 @@ router.post("/", function(req, res) {
 });
 
 // NEW route -> shows form to create new challenge
-router.get("/new", function(req, res) {
+router.get("/new", isLoggedIn, function(req, res) {
     res.render("challenges/new");
 });
 
@@ -50,5 +54,12 @@ router.get("/:id", function(req, res) {
         }
     });
 });
+
+function isLoggedIn(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect("/login");
+}
 
 module.exports = router;

@@ -16,7 +16,7 @@ var commentRoutes = require("./routes/comments"),
 var User = require("./models/user");
 
 var seedDB = require("./seeds");
-seedDB();
+// seedDB();
 
 //======================================== passport configuration section
 app.use(require("express-session")({

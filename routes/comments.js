@@ -31,6 +31,11 @@ router.post("/", isLoggedIn, function(req, res) {
                     console.log(err);
                 }
                 else {
+                    // add username & id to comment
+                    comment.author.id = req.user._id;
+                    comment.author.username = req.user.username;
+                    //save comment
+                    comment.save();
                     challenge.comments.push(comment);
                     challenge.save();
                     // redirect to challenge show page
