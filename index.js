@@ -34,7 +34,12 @@ passport.deserializeUser(User.deserializeUser());
 app.use(bodyParser.urlencoded({ extended: true }));
 mongoose.connect("mongodb://localhost/online_arena", { useNewUrlParser: true });
 app.set("view engine", "ejs");
-app.use(express.static(__dirname + "/public"))
+app.use(express.static(__dirname + "/public"));
+
+app.use(function(req, res, next) {
+    res.locals.currentUser = req.user;
+    next();
+});
 
 //======================================== routing section
 app.get("/", function(req, res) {
@@ -93,7 +98,7 @@ app.get("/challenges/:id", function(req, res) {
 // COMMENT ROUTES  ===
 // ===================
 
-app.get("/challenges/:id/comments/new", function(req, res) {
+app.get("/challenges/:id/comments/new", isLoggedIn, function(req, res) {
     // find challenge by ID
     Challenge.findById(req.params.id, function(err, challenge) {
         if (err) {
@@ -105,7 +110,7 @@ app.get("/challenges/:id/comments/new", function(req, res) {
     });
 });
 
-app.post("/challenges/:id/comments", function(req, res) {
+app.post("/challenges/:id/comments", isLoggedIn, function(req, res) {
     // lookup challenge using ID
     Challenge.findById(req.params.id, function(err, challenge) {
         if (err) {
@@ -168,6 +173,19 @@ app.post("/login", passport.authenticate("local", {
 }), function(req, res) {
     //nothing in callback
 });
+
+// logout route
+app.get("/logout", function(req, res) {
+    req.logout();
+    res.redirect("/challenges");
+});
+
+function isLoggedIn(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect("/login");
+}
 
 //======================================== run section
 // SERVER START LISTENING TO IP/PORT
