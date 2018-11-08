@@ -21,7 +21,7 @@ var data = [{
 
 function seedDB() {
     // remove all challenges
-    Challenge.remove({}, function(err) {
+    Challenge.deleteMany({}, function(err) {
         if (err) {
             console.log(err);
         }
