@@ -72,10 +72,24 @@ router.get("/:id/edit", function(req, res) {
 router.put("/:id", function(req, res) {
     Challenge.findByIdAndUpdate(req.params.id, req.body.challenge, function(err, updatedChallenge) {
         if (err) {
+            console.log(err);
             res.redirect("/challenges");
         }
         else {
             res.redirect("/challenges/" + req.params.id);
+        }
+    });
+});
+
+// DESTROY route -> deletes challenge
+router.delete("/:id", function(req, res) {
+    Challenge.findByIdAndRemove(req.params.id, function(err) {
+        if (err) {
+            console.log(err);
+            res.redirect("/challenges");
+        }
+        else {
+            res.redirect("/challenges");
         }
     });
 });
