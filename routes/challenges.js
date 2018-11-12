@@ -55,6 +55,31 @@ router.get("/:id", function(req, res) {
     });
 });
 
+// EDIT route -> edit challenge
+router.get("/:id/edit", function(req, res) {
+    Challenge.findById(req.params.id, function(err, foundChallenge) {
+        if (err) {
+            console.log(err);
+            res.redirect("/challenges")
+        }
+        else {
+            res.render("challenges/edit", { challenge: foundChallenge });
+        }
+    });
+});
+
+// UPDATE route -> update challenge
+router.put("/:id", function(req, res) {
+    Challenge.findByIdAndUpdate(req.params.id, req.body.challenge, function(err, updatedChallenge) {
+        if (err) {
+            res.redirect("/challenges");
+        }
+        else {
+            res.redirect("/challenges/" + req.params.id);
+        }
+    });
+});
+
 function isLoggedIn(req, res, next) {
     if (req.isAuthenticated()) {
         return next();

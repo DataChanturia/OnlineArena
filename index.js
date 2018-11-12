@@ -12,10 +12,12 @@ var commentRoutes = require("./routes/comments"),
     challengeRoutes = require("./routes/challenges"),
     indexRoutes = require("./routes/index");
 
+var methodOverride = require("method-override");
+
 //======================================== DB section
 var User = require("./models/user");
 
-var seedDB = require("./seeds");
+// var seedDB = require("./seeds");
 // seedDB();
 
 //======================================== passport configuration section
@@ -37,6 +39,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 mongoose.connect("mongodb://localhost/online_arena", { useNewUrlParser: true });
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
+app.use(methodOverride("_method"));
 
 app.use(function(req, res, next) {
     res.locals.currentUser = req.user;
