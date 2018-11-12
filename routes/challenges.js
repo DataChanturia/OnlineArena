@@ -56,20 +56,14 @@ router.get("/:id", function(req, res) {
 });
 
 // EDIT route -> edit challenge
-router.get("/:id/edit", function(req, res) {
+router.get("/:id/edit", checkChallengeOwnership, function(req, res) {
     Challenge.findById(req.params.id, function(err, foundChallenge) {
-        if (err) {
-            console.log(err);
-            res.redirect("/challenges")
-        }
-        else {
-            res.render("challenges/edit", { challenge: foundChallenge });
-        }
+        res.render("challenges/edit", { challenge: foundChallenge });
     });
 });
 
 // UPDATE route -> update challenge
-router.put("/:id", function(req, res) {
+router.put("/:id", checkChallengeOwnership, function(req, res) {
     Challenge.findByIdAndUpdate(req.params.id, req.body.challenge, function(err, updatedChallenge) {
         if (err) {
             console.log(err);
@@ -82,7 +76,7 @@ router.put("/:id", function(req, res) {
 });
 
 // DESTROY route -> deletes challenge
-router.delete("/:id", function(req, res) {
+router.delete("/:id", checkChallengeOwnership, function(req, res) {
     Challenge.findByIdAndRemove(req.params.id, function(err) {
         if (err) {
             console.log(err);
@@ -93,6 +87,28 @@ router.delete("/:id", function(req, res) {
         }
     });
 });
+
+function checkChallengeOwnership(req, res, next) {
+    if (req.isAuthenticated()) {
+        Challenge.findById(req.params.id, function(err, foundChallenge) {
+            if (err) {
+                console.log(err);
+                res.redirect("back");
+            }
+            else {
+                if (foundChallenge.author.id.equals(req.user._id)) {
+                    next();
+                }
+                else {
+                    res.redirect("back");
+                }
+            }
+        });
+    }
+    else {
+        res.redirect("back");
+    }
+}
 
 function isLoggedIn(req, res, next) {
     if (req.isAuthenticated()) {

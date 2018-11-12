@@ -20,10 +20,12 @@
                     <p>
                         <em>Created by <%= challenge.author.username %></em>
                     </p>
+                    <% if(currentUser && challenge.author.id.equals(currentUser._id)){ %>
                     <a class="btn btn-xs btn-warning" href="/challenges/<%= challenge._id %>/edit">Edit</a>
                     <form id="delete-form" action="/challenges/<%= challenge._id %>?_method=DELETE" method="POST">
                         <button class="btn btn-xs btn-danger">Delete</button>
                     </form>
+                    <% } %>
                 </div>
             </div>
             <div class="well">
