@@ -41,6 +41,9 @@
                             <p>
                                 <%= comment.text %>
                             </p>
+                            <a class="btn btn-xs btn-warning" 
+                                href="/challenges/<%= challenge._id %>/comments/<%= comment._id %>/edit">Edit
+                            </a>
                         </div>
                     </div>
                 <% }) %>
