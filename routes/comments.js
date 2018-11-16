@@ -73,6 +73,20 @@ router.put("/:comment_id", function(req, res) {
     });
 });
 
+// Comments DESTROY route
+router.delete("/:comment_id", function(req, res) {
+    // find comment by id and remove
+    Comment.findByIdAndRemove(req.params.comment_id, function(err) {
+        if (err) {
+            console.log(err);
+            res.redirect("back");
+        }
+        else {
+            res.redirect("/challenges/" + req.params.id);
+        }
+    });
+});
+
 function isLoggedIn(req, res, next) {
     if (req.isAuthenticated()) {
         return next();
