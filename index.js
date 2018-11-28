@@ -37,7 +37,10 @@ passport.deserializeUser(User.deserializeUser());
 
 //======================================== setup section
 app.use(bodyParser.urlencoded({ extended: true }));
-mongoose.connect("mongodb://localhost/online_arena", { useNewUrlParser: true });
+
+// mongoose.connect("mongodb://localhost/online_arena", { useNewUrlParser: true });
+mongoose.connect("mongodb://dchan13:coolpass13@ds053948.mlab.com:53948/onlinearena", { useNewUrlParser: true });
+
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
