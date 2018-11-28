@@ -4,8 +4,7 @@
   "description": "# github commands for me:     # github setup     sudo apt-get install git     git config --global user.name \"dchan13\"     git config --global user.email \"davidchanturia13@gmail.com\"     git init ../online_arena",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "index.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
