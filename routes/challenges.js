@@ -5,6 +5,30 @@ var middleware = require("../middleware");
 
 var Challenge = require("../models/challenge");
 
+// == FILE UPLOAD SETUP -- START ==
+var multer = require('multer');
+var storage = multer.diskStorage({
+    filename: function(req, file, callback) {
+        callback(null, Date.now() + file.originalname);
+    }
+});
+var imageFilter = function(req, file, cb) {
+    // accept image files only
+    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
+        return cb(new Error('Only image files are allowed!'), false);
+    }
+    cb(null, true);
+};
+var upload = multer({ storage: storage, fileFilter: imageFilter });
+
+var cloudinary = require('cloudinary');
+cloudinary.config({
+    cloud_name: 'dss6ilpjl',
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
+// == FILE UPLOAD SETUP -- END ==
+
 // INDEX route -> shows all challenges
 router.get("/", function(req, res) {
     Challenge.find({}, function(err, allChallenges) {
@@ -18,24 +42,22 @@ router.get("/", function(req, res) {
 });
 
 // CREATE route -> creates new challenge
-router.post("/", middleware.isLoggedIn, function(req, res) {
-    // get data from form + add to array
-    var name = req.body.name;
-    var duration = req.body.duration
-    var coverImage = req.body.coverImage;
-    var desc = req.body.description;
-    var author = {
-        id: req.user._id,
-        username: req.user.username
-    };
-    var newChallenge = { name: name, duration: duration, coverImage: coverImage, description: desc, author: author };
-    Challenge.create(newChallenge, function(err, newlyCreated) {
-        if (err) {
-            console.log(err);
-        }
-        else {
-            res.redirect("/challenges");
-        }
+router.post("/", middleware.isLoggedIn, upload.single('coverImage'), function(req, res) {
+    cloudinary.uploader.upload(req.file.path, function(result) {
+        // add cloudinary url for the image to the campground object under image property
+        req.body.challenge.coverImage = result.secure_url;
+        // add author to challenge
+        req.body.challenge.author = {
+            id: req.user._id,
+            username: req.user.username
+        };
+        Challenge.create(req.body.challenge, function(err, challenge) {
+            if (err) {
+                req.flash('error', err.message);
+                return res.redirect('back');
+            }
+            res.redirect('/challenges/' + challenge.id);
+        });
     });
 });
 

@@ -38,7 +38,8 @@ passport.deserializeUser(User.deserializeUser());
 //======================================== setup section
 app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose.connect(process.env.DATABASEURL, { useNewUrlParser: true });
+var dbURL = process.env.DATABASEURL || "mongodb://localhost/online_arena";
+mongoose.connect(dbURL, { useNewUrlParser: true });
 
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
