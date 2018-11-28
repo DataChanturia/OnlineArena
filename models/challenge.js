@@ -5,6 +5,7 @@ var challengeSchema = new mongoose.Schema({
     name: String,
     coverImage: String,
     description: String,
+    duration: String,
     author: {
         id: {
             type: mongoose.Schema.Types.ObjectId,

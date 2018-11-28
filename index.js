@@ -3,6 +3,7 @@ var express = require("express");
 var app = express();
 
 var mongoose = require("mongoose");
+var flash = require("connect-flash");
 var bodyParser = require("body-parser");
 
 var passport = require("passport"),
@@ -40,9 +41,12 @@ mongoose.connect("mongodb://localhost/online_arena", { useNewUrlParser: true });
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
+app.use(flash());
 
 app.use(function(req, res, next) {
     res.locals.currentUser = req.user;
+    res.locals.error = req.flash("error");
+    res.locals.success = req.flash("success");
     next();
 });
 
