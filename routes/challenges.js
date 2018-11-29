@@ -144,6 +144,7 @@ router.delete("/:id", middleware.checkChallengeOwnership, function(req, res) {
         try {
             await cloudinary.v2.uploader.destroy(challenge.imageId);
             challenge.remove();
+            req.flash('success', 'Challenge successfully deleted');
             res.redirect('/challenges');
         }
         catch (err) {
