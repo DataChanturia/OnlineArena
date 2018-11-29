@@ -42,10 +42,15 @@ router.get("/", function(req, res) {
 });
 
 // CREATE route -> creates new challenge
-router.post("/", middleware.isLoggedIn, upload.single('coverImage'), function(req, res) {
-    cloudinary.uploader.upload(req.file.path, function(result) {
-        // add cloudinary url for the image to the campground object under image property
+router.post("/", middleware.isLoggedIn, upload.single('challenge[coverImage]'), function(req, res) {
+    cloudinary.v2.uploader.upload(req.file.path, function(err, result) {
+        if (err) {
+            req.flash('error', err.message);
+            return res.redirect('back');
+        }
+        // add cloudinary url for the image to the challenge object under image property
         req.body.challenge.coverImage = result.secure_url;
+        req.body.challenge.imageId = result.public_id;
         // add author to challenge
         req.body.challenge.author = {
             id: req.user._id,
@@ -94,27 +99,58 @@ router.get("/:id/edit", middleware.checkChallengeOwnership, function(req, res) {
 });
 
 // UPDATE route -> update challenge
-router.put("/:id", middleware.checkChallengeOwnership, function(req, res) {
-    Challenge.findByIdAndUpdate(req.params.id, req.body.challenge, function(err, updatedChallenge) {
+router.put("/:id", middleware.checkChallengeOwnership, upload.single("challenge[coverImage]"), function(req, res) {
+    Challenge.findById(req.params.id, async function(err, foundChallenge) {
         if (err) {
-            console.log(err || !updatedChallenge);
-            res.redirect("/challenges");
+            req.flash('error', err.message);
+            res.redirect('back');
         }
         else {
-            res.redirect("/challenges/" + req.params.id);
+            var imageId, coverImage;
+            if (req.file) {
+                try {
+                    await cloudinary.v2.uploader.destroy(foundChallenge.imageId);
+                    var result = await cloudinary.v2.uploader.upload(req.file.path);
+                    imageId = result.public_id;
+                    coverImage = result.secure_url;
+                }
+                catch (err) {
+                    req.flash('error', err.message);
+                    return res.redirect('back');
+                }
+            }
+            foundChallenge.name = req.body.challenge.name;
+            foundChallenge.duration = req.body.challenge.duration;
+            foundChallenge.description = req.body.challenge.description;
+            if (imageId) {
+                foundChallenge.imageId = imageId;
+                foundChallenge.coverImage = coverImage;
+            }
+            foundChallenge.save(function() {});
+
+            req.flash("success", "Successfully Updated");
+            res.redirect("/challenges/" + foundChallenge._id);
         }
     });
 });
 
 // DESTROY route -> deletes challenge
 router.delete("/:id", middleware.checkChallengeOwnership, function(req, res) {
-    Challenge.findByIdAndRemove(req.params.id, function(err) {
+    Challenge.findById(req.params.id, async function(err, challenge) {
         if (err) {
-            console.log(err);
-            res.redirect("/challenges");
+            req.flash('error', err.message);
+            return res.redirect("back");
         }
-        else {
-            res.redirect("/challenges");
+        try {
+            await cloudinary.v2.uploader.destroy(challenge.imageId);
+            challenge.remove();
+            res.redirect('/challenges');
+        }
+        catch (err) {
+            if (err) {
+                req.flash('error', err.message);
+                return res.redirect("back");
+            }
         }
     });
 });

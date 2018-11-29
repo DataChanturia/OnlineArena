@@ -4,6 +4,7 @@ var mongoose = require("mongoose");
 var challengeSchema = new mongoose.Schema({
     name: String,
     coverImage: String,
+    imageId: String,
     description: String,
     duration: String,
     author: {
