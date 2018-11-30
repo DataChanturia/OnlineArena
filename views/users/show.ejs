@@ -22,6 +22,9 @@
         </div>
         <div class='col-md-3'>
             <h1><%= user.username %></h1>
+            <p>name: <%= user.firstName + " " + user.lastName %> %></p>
+            <p>birth year: <%= user.birthYear %></p>
+            <p>gender: <%= user.gender %></p>
             <div class='thumbnail'>
                 <img src='<%= user.avatar %>' alt='user profile image'>
                 <div class='caption'><a href='mailto:<%= user.email %>'><%= user.email %></a></div>

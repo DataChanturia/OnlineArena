@@ -35,7 +35,7 @@ router.get("/", function(req, res) {
     var message = '';
     if (req.query.search) {
         const regex = new RegExp(escapeRegex(req.query.search), 'gi');
-        Challenge.find({ name: regex }, function(err, allChallenges) {
+        Challenge.find({ $and: [{ name: regex }, { comments: regex }] }, function(err, allChallenges) {
             if (err) {
                 console.log(err);
             }

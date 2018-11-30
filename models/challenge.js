@@ -14,7 +14,14 @@ var challengeSchema = new mongoose.Schema({
         },
         username: String
     },
-    comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }]
+    comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
+    tags: [],
+    requirements: {
+        gender: String,
+        age: String,
+        firstName: String,
+        lastName: String
+    }
 });
 
 module.exports = mongoose.model("Challenge", challengeSchema);
