@@ -31,14 +31,28 @@ cloudinary.config({
 
 // INDEX route -> shows all challenges
 router.get("/", function(req, res) {
-    Challenge.find({}, function(err, allChallenges) {
-        if (err) {
-            console.log(err);
-        }
-        else {
-            res.render("challenges/index", { challenges: allChallenges });
-        }
-    });
+    // eval(require("locus"));
+    if (req.query.search) {
+        const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+        Challenge.find({ name: regex }, function(err, allChallenges) {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                res.render("challenges/index", { challenges: allChallenges });
+            }
+        });
+    }
+    else {
+        Challenge.find({}, function(err, allChallenges) {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                res.render("challenges/index", { challenges: allChallenges });
+            }
+        });
+    }
 });
 
 // CREATE route -> creates new challenge
@@ -155,5 +169,9 @@ router.delete("/:id", middleware.checkChallengeOwnership, function(req, res) {
         }
     });
 });
+
+function escapeRegex(text) {
+    return text.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+}
 
 module.exports = router;
