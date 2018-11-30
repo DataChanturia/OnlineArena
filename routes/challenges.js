@@ -32,6 +32,7 @@ cloudinary.config({
 // INDEX route -> shows all challenges
 router.get("/", function(req, res) {
     // eval(require("locus"));
+    var message = '';
     if (req.query.search) {
         const regex = new RegExp(escapeRegex(req.query.search), 'gi');
         Challenge.find({ name: regex }, function(err, allChallenges) {
@@ -39,7 +40,10 @@ router.get("/", function(req, res) {
                 console.log(err);
             }
             else {
-                res.render("challenges/index", { challenges: allChallenges });
+                if (allChallenges.length == 0) {
+                    message = "No challenges found, please try again";
+                }
+                res.render("challenges/index", { challenges: allChallenges, message: message });
             }
         });
     }
@@ -49,7 +53,7 @@ router.get("/", function(req, res) {
                 console.log(err);
             }
             else {
-                res.render("challenges/index", { challenges: allChallenges });
+                res.render("challenges/index", { challenges: allChallenges, message: message });
             }
         });
     }
