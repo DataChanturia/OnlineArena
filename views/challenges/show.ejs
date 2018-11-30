@@ -18,7 +18,7 @@
                     <h4><a><%= challenge.name %></a></h4>
                     <p><%= challenge.description %></p>
                     <p>
-                        <em>Created by <%= challenge.author.username %></em>
+                        <em>Created by <a href='/users/<%= challenge.author.id %>'><%= challenge.author.username %></a></em>
                     </p>
                     <% if(currentUser && challenge.author.id.equals(currentUser._id)){ %>
                         <a class="btn btn-xs btn-warning" href="/challenges/<%= challenge._id %>/edit">Edit</a>

@@ -1,0 +1,33 @@
+<% include ../partials/header %>
+
+<div class="container">
+    <div class='row'>
+        <div class='col-md-8'>
+            <h3><strong><%= user.username %>'s challenges:</strong></h3>
+            <div class="row text-center" style="display: flex; flex-wrap: wrap;">
+                <% for(var i = 0; i < challenges.length; i++) { %>
+                    <div class='col-md-4 col-sm-6'>
+                        <div class="thumbnail">
+                            <img style="width:100%;" src="<%= challenges[i].coverImage %>">
+                            <div class='caption'>
+                                <h4><%= challenges[i].name %></h4>
+                            </div>
+                            <p>
+                                <a href="/challenges/<%= challenges[i]._id %>" class="btn btn-primary">More Info</a>
+                            </p>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+        <div class='col-md-4'>
+            <h1><%= user.username %></h1>
+            <div class='thumbnail'>
+                <img src='<%= user.avatar %>' alt='user profile image'>
+                <div class='caption'><a href='mailto:<%= user.email %>'><%= user.email %></a></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% include ../partials/footer %>
