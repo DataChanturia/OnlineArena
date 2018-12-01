@@ -6,7 +6,9 @@ var challengeSchema = new mongoose.Schema({
     coverImage: String,
     imageId: String,
     description: String,
-    duration: String,
+    type: String,
+    startDate: Date,
+    endDate: Date,
     author: {
         id: {
             type: mongoose.Schema.Types.ObjectId,
@@ -15,12 +17,14 @@ var challengeSchema = new mongoose.Schema({
         username: String
     },
     comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
-    tags: [],
-    requirements: {
+    tags: [{ type: String }],
+    restrictions: {
         gender: String,
-        age: String,
+        minAge: String,
+        maxAge: String,
         firstName: String,
-        lastName: String
+        lastName: String,
+        minParticipants: String
     }
 });
 

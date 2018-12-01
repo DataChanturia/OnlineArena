@@ -6,17 +6,50 @@
         <div style="width: 30%; margin: 25px auto">
             <form action="/challenges" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
-                    <input class="form-control" type='text' name='challenge[name]' placeholder='name' required>
+                    <input class="form-control" type='text' name='challenge[name]' placeholder='challenge name' required>
                 </div>
                 <div class="form-group">
-                    <input class="form-control" type='number' name='challenge[duration]' placeholder='duration' min='1' step='1' required>
+                    <label for='startDate'>Pick start date: </label>
+                    <input id='startDate' name='challenge[startDate]' type="date" data-date-inline-picker="true" required/>
+                </div>
+                 <div class="form-group">
+                    <label for='endDate'>Pick end date: </label>
+                    <input id='endDate' name='challenge[endDate]' type="date" data-date-inline-picker="true" required/>
+                </div>
+                <div class='form-group' >
+                    <label>Select challenge type: </label>
+                    <label for="male">Pre-register</label>
+                    <input type="radio" id="preregister" name="challenge[type]" value="preregister">
+                    <label for="female">Ongoing</label>
+                    <input type="radio" id="ongoing" name="challenge[type]" value="ongoing" checked>
+                </div>
+                <div class='form-group' >
+                    <input class='form-control' type="number" name="minAge" placeholder="participant min age" min='18' max='120' step='1' required>
+                </div>
+                <div class='form-group' >
+                    <input class='form-control' type="number" name="maxAge" placeholder="participant max age" min='18' max='120' step='1' required>
+                </div>
+                <div class='form-group' >
+                    <label>Allow: </label>
+                    <label for="male">Male</label>
+                    <input type="radio" id="male" name="gender" value="male">
+                    <label for="female">Female</label>
+                    <input type="radio" id="female" name="gender" value="female">
+                    <label for="allGender">Both</label>
+                    <input type="radio" id="allGender" name="gender" value="both" checked>
                 </div>
                 <div class="form-group">
-                    <label for="image">Image</label>
+                    <input class="form-control" type='text' name='firstName' placeholder='first name restriction (not required)'>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type='text' name='lastName' placeholder='last name restriction  (not required)'>
+                </div>
+                <div class="form-group">
+                    <label for="image">Upload cover image: </label>
                     <input type='file' id='image' name='challenge[coverImage]' accept='image/*' required>
                 </div>
-                <div class="form-group">
-                    <input class="form-control" type='text' name='challenge[description]' placeholder='description' required>
+                <div class='form-group' >
+                    <input class='form-control' type="number" name="minParticipants" placeholder="min quantity of participants" min='1' step='1' required>
                 </div>
                 <div class="form-group">
                     <button class="btn btn-lg btn-primary btn-block">Submit</button>
@@ -27,4 +60,31 @@
     </div>
 </div>
 
+<script>
+    function getToday(){
+        var dtToday = new Date();
+        var month = dtToday.getMonth();
+        var day = dtToday.getDate();
+        var year = dtToday.getFullYear();
+        if(month < 10)
+            month = '0' + month.toString();
+        if(day < 10)
+            day = '0' + day.toString();
+        return year + '-' + month + '-' + day;
+    }
+    
+    $(function(){
+        var minDate = getToday();
+        $('#startDate').attr('min', minDate);
+        $('#startDate').val(minDate);
+        $('#endDate').val(minDate);
+        $('#endDate').attr('min', minDate);
+    });
+
+    $('#endDate').click(function onc(){
+        var startDate = $('#startDate').val();
+        $('#endDate').val(startDate);
+        $('#endDate').attr('min', startDate);
+    });
+</script>
 <% include ../partials/footer %>

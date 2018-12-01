@@ -14,14 +14,13 @@
             <div class="thumbnail">
                 <img class="img-responsive" src="<%= challenge.coverImage %>">
                 <div class="caption-full">
-                    <h4 class="pull-right">Challenge duration: <%= challenge.duration %> days </h4>
                     <h4><a><%= challenge.name %></a></h4>
                     <p><%= challenge.description %></p>
                     <p>
                         <em>Created by <a href='/users/<%= challenge.author.id %>'><%= challenge.author.username %></a></em>
                     </p>
                     <% if(currentUser && challenge.author.id.equals(currentUser._id)){ %>
-                        <a class="btn btn-xs btn-warning" href="/challenges/<%= challenge._id %>/edit">Edit</a>
+                        <!--<a class="btn btn-xs btn-warning" href="/challenges/<%= challenge._id %>/edit">Edit</a>-->
                         <form id="delete-form" action="/challenges/<%= challenge._id %>?_method=DELETE" method="POST">
                             <button class="btn btn-xs btn-danger">Delete</button>
                         </form>
