@@ -17,14 +17,20 @@ var challengeSchema = new mongoose.Schema({
         username: String
     },
     comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
+    voters: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    participants: [{
+        user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+        score: { type: Number, default: 0 },
+        image: String
+    }],
     tags: [{ type: String }],
     restrictions: {
         gender: String,
-        minAge: String,
-        maxAge: String,
+        minAge: Number,
+        maxAge: Number,
         firstName: String,
         lastName: String,
-        minParticipants: String
+        minParticipants: Number
     }
 });
 

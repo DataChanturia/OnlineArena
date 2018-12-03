@@ -34,8 +34,8 @@ router.get("/", function(req, res) {
     // eval(require("locus"));
     var message = '';
     if (req.query.search) {
-        const regex = new RegExp(escapeRegex(req.query.search), 'gi');
-        Challenge.find({ $and: [{ name: regex }, { comments: regex }] }, function(err, allChallenges) {
+        const regex = new RegExp(req.query.search.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'gi');
+        Challenge.find({ $and: [{ name: regex }] }, function(err, allChallenges) {
             if (err) {
                 console.log(err);
             }
@@ -104,7 +104,7 @@ router.get("/:id", function(req, res) {
             console.log(err);
         }
         else {
-            console.log(foundChallenge);
+            //console.log(foundChallenge);
             // render show template with that challenge
             res.render("challenges/show", { challenge: foundChallenge });
         }
@@ -182,8 +182,31 @@ router.delete("/:id", middleware.checkChallengeOwnership, function(req, res) {
     });
 });
 
-function escapeRegex(text) {
-    return text.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-}
+// PARTICIPATE route - > redirect user to registration
+router.get("/:id/participate", middleware.checkParticipationStatus, function(req, res) {
+    Challenge.findById(req.params.id, function(err, foundChallenge) {
+        if (err || !foundChallenge) {
+            console.log(err);
+            return res.redirect("back");
+        }
+        return res.render('challenges/participate', { challenge: foundChallenge });
+    });
+});
+
+// REGISTER route -> register user to challenge
+router.post("/:id/participate/:userId", middleware.checkParticipationStatus, function(req, res) {
+    Challenge.findById(req.params.id, function(err, foundChallenge) {
+        if (err) {
+            res.redirect("back");
+            console.log(err);
+        }
+        else {
+            foundChallenge.participants.push({ user: req.user.id, score: 0, image: req.body.image });
+            foundChallenge.save();
+            req.flash('success', "You have successfully registered to challenge. Good luck!");
+            res.redirect("/challenges/" + req.params.id);
+        }
+    });
+});
 
 module.exports = router;

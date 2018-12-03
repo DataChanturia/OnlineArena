@@ -3,7 +3,7 @@ var router = express.Router();
 var passport = require("passport");
 
 var User = require("../models/user");
-var Challenge = require("../models/challenge")
+var Challenge = require("../models/challenge");
 
 router.get("/", function(req, res) {
     res.render("landing");
@@ -45,15 +45,17 @@ router.post("/register", function(req, res) {
 
 // show login form
 router.get("/login", function(req, res) {
-    res.render("login");
+    res.render("login", { referer: req.headers.referer });
 });
 
 // handle login logic
-router.post("/login", passport.authenticate("local", {
-    successRedirect: "/challenges",
-    failureRedirect: "/login"
-}), function(req, res) {
-    //nothing in callback
+router.post("/login", passport.authenticate("local", { failureRedirect: "/login" }), function(req, res) {
+    if (req.body.referer.includes("/login")) {
+        return res.redirect("/challenges");
+    }
+    else {
+        res.redirect(req.body.referer);
+    }
 });
 
 // logout route

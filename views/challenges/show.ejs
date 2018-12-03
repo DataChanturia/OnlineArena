@@ -4,10 +4,17 @@
     <div class="row">
         <div class="col-md-3">
             <p class="lead">OnlineArena</p>
-            <div class="list-group">
-                <li class="list-group-item active">1</li>
-                <li class="list-group-item">2</li>
-                <li class="list-group-item">3</li>
+            <div class="list-group" style="text-align: center;">
+                <li class="list-group-item active" id="startCount"><strong>loading...</strong></li>
+                <li class="list-group-item"><strong>Registered: <%= challenge.participants.length %> Required: <%= challenge.restrictions.minParticipants %></strong></li>
+            </div>
+            <div class='col-md-6'>
+                <form action="/challenges/<%= challenge._id %>/participate/" method="GET">
+                    <button class="btn-block btn btn-primary">Participate</button>
+                </form>
+            </div>
+            <div class='col-md-6'>
+                <button class="btn-block btn btn-primary">Vote</button>    
             </div>
         </div>
         <div class="col-md-9">
@@ -55,5 +62,46 @@
         </div>
     </div>
 </div>
+
+<script>
+    // Set the date we're counting down to
+    var countDownDate = <%- JSON.stringify(challenge.startDate) %>
+    countDownDate = new Date(countDownDate).getTime();
+
+    // Update the count down every 1 second
+    var x = setInterval(function() {
+    
+        // Get todays date and time
+        var now = new Date().getTime();
+        
+        // Find the distance between now and the count down date
+        var distance = countDownDate - now;
+        
+        // Time calculations for days, hours, minutes and seconds
+        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        
+        // Output the result in an element with id="demo"
+        document.getElementById("startCount").innerHTML = "<strong>Starts in: </strong>" + days + "d " + hours + "h "
+        + minutes + "m " + seconds + "s";
+        
+        // If the count down is over, write some text 
+        if (distance < 0) {
+            if(<%- challenge.endDate.getTime() %> < (new Date()).getTime()){
+                document.getElementById("startCount").innerHTML = "<strong>Challenge ended</strong>";
+                return;
+            }
+            clearInterval(x);
+            var displayText = "<strong>Challenge started</strong>";
+            if(<%- challenge.participants.length %> < <%- challenge.restrictions.minParticipants %>){
+                displayText = "<strong>Challenge failed, not enough participants</strong>";
+            }
+            document.getElementById("startCount").innerHTML = displayText;
+            return;
+        }
+    }, 1000);
+</script>
 
 <% include ../partials/footer %>
