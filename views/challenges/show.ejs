@@ -7,6 +7,14 @@
             <div class="list-group" style="text-align: center;">
                 <li class="list-group-item active" id="startCount"><strong>loading...</strong></li>
                 <li class="list-group-item"><strong>Registered: <%= challenge.participants.length %> Required: <%= challenge.restrictions.minParticipants %></strong></li>
+                <%
+                    var voteNum = 0;
+                    for(var i = 0; i < challenge.participants.length; i++){
+                        voteNum += challenge.participants[i].score;
+                    }
+                %>
+                
+                <li class="list-group-item"><strong>Votes received: <%= voteNum %></strong></li>
             </div>
             <div class='col-md-6'>
                 <form action="/challenges/<%= challenge._id %>/participate/" method="GET">
@@ -29,7 +37,7 @@
                         <em>Created by <a href='/users/<%= challenge.author.id %>'><%= challenge.author.username %></a></em>
                     </p>
                     <% if(currentUser && challenge.author.id.equals(currentUser._id)){ %>
-                        <!--<a class="btn btn-xs btn-warning" href="/challenges/<%= challenge._id %>/edit">Edit</a>-->
+                        <a class="btn btn-xs btn-warning" href="/challenges/<%= challenge._id %>/edit">Edit</a>
                         <form id="delete-form" action="/challenges/<%= challenge._id %>?_method=DELETE" method="POST">
                             <button class="btn btn-xs btn-danger">Delete</button>
                         </form>

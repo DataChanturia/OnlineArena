@@ -1,9 +1,11 @@
-var express = require("express");
-var router = express.Router();
-var passport = require("passport");
+var express = require("express"),
+    passport = require("passport");
 
-var User = require("../models/user");
-var Challenge = require("../models/challenge");
+var router = express.Router();
+
+var middleware = require("../middleware");
+var User = require("../models/user"),
+    Challenge = require("../models/challenge");
 
 router.get("/", function(req, res) {
     res.render("landing");
@@ -15,7 +17,7 @@ router.get("/", function(req, res) {
 
 // show register form
 router.get("/register", function(req, res) {
-    res.render("register");
+    res.render("users/register");
 });
 
 // handle sign up logic
@@ -45,7 +47,7 @@ router.post("/register", function(req, res) {
 
 // show login form
 router.get("/login", function(req, res) {
-    res.render("login", { referer: req.headers.referer });
+    res.render("users/login", { referer: req.headers.referer });
 });
 
 // handle login logic
@@ -85,5 +87,34 @@ router.get('/users/:id', function(req, res) {
         });
     });
 });
+
+// EDIT route -> edit user profile
+router.get("/users/:id/edit", middleware.isLoggedIn, function(req, res) {
+    User.findById(req.user._id, function(err, foundUser) {
+        if (err || !foundUser) {
+            req.flash("error", err.message);
+            return res.redirect("back");
+        }
+        else {
+            res.render("users/edit", { user: foundUser });
+
+        }
+    });
+});
+
+// user UPDATE route
+router.put("/users/:id", middleware.isLoggedIn, function(req, res) {
+    // eval(require("locus"));
+    User.findByIdAndUpdate(req.user._id, req.body.user, function(err, updatedUser) {
+        if (err) {
+            req.flash("error", err.message);
+            return res.redirect("back");
+        }
+        else {
+            res.redirect("/users/" + req.user._id);
+        }
+    });
+});
+
 
 module.exports = router;

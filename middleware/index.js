@@ -77,7 +77,7 @@ middlewareObj.checkParticipationStatus = function(req, res, next) {
                     res.redirect("back");
                 }
                 else {
-                    if (foundChallenge.participants.length == 0 || functions.findIndexInData(foundChallenge.participants, "_id", req.user.id)) {
+                    if (foundChallenge.participants.length == 0 || !functions.findIndexInData(foundChallenge.participants, "user", req.user.id)) {
                         User.findById(req.user.id, function(err, foundUser) {
                             if (err) {
                                 console.log(err || !foundChallenge);
