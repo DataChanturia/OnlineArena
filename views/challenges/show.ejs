@@ -89,14 +89,13 @@
         
         // If the count down is over, write some text 
         if (distance < 0) {
-            if(<%- challenge.endDate.getTime() %> < (new Date()).getTime()){
-                document.getElementById("startCount").innerHTML = "<strong>Challenge ended</strong>";
-                return;
-            }
             clearInterval(x);
             var displayText = "<strong>Challenge started</strong>";
             if(<%- challenge.participants.length %> < <%- challenge.restrictions.minParticipants %>){
                 displayText = "<strong>Challenge failed, not enough participants</strong>";
+            }
+            if(<%- challenge.endDate.getTime() %> < (new Date()).getTime()){
+                document.getElementById("startCount").innerHTML = "<strong>Challenge ended</strong>";
             }
             document.getElementById("startCount").innerHTML = displayText;
             return;
