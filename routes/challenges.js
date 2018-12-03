@@ -37,7 +37,8 @@ router.get("/", function(req, res) {
         const regex = new RegExp(req.query.search.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'gi');
         Challenge.find({ $and: [{ name: regex }] }, function(err, allChallenges) {
             if (err) {
-                console.log(err);
+                req.flash("error", err.message);
+                res.redirect("back");
             }
             else {
                 if (allChallenges.length == 0) {
@@ -50,7 +51,8 @@ router.get("/", function(req, res) {
     else {
         Challenge.find({}, function(err, allChallenges) {
             if (err) {
-                console.log(err);
+                req.flash("error", err.message);
+                res.redirect("back");
             }
             else {
                 res.render("challenges/index", { challenges: allChallenges, message: message });
@@ -101,7 +103,8 @@ router.get("/new", middleware.isLoggedIn, function(req, res) {
 router.get("/:id", function(req, res) {
     Challenge.findById(req.params.id).populate("comments").exec(function(err, foundChallenge) {
         if (err || !foundChallenge) {
-            console.log(err);
+            req.flash("error", err.message);
+            return res.redirect("back");
         }
         else {
             //console.log(foundChallenge);
@@ -186,7 +189,7 @@ router.delete("/:id", middleware.checkChallengeOwnership, function(req, res) {
 router.get("/:id/participate", middleware.checkParticipationStatus, function(req, res) {
     Challenge.findById(req.params.id, function(err, foundChallenge) {
         if (err || !foundChallenge) {
-            console.log(err);
+            req.flash("error", err.message);
             return res.redirect("back");
         }
         return res.render('challenges/participate', { challenge: foundChallenge });
@@ -197,14 +200,42 @@ router.get("/:id/participate", middleware.checkParticipationStatus, function(req
 router.post("/:id/participate/:userId", middleware.checkParticipationStatus, function(req, res) {
     Challenge.findById(req.params.id, function(err, foundChallenge) {
         if (err) {
-            res.redirect("back");
-            console.log(err);
+            req.flash("error", err.message);
+            return res.redirect("back");
         }
         else {
             foundChallenge.participants.push({ user: req.user.id, score: 0, image: req.body.image });
             foundChallenge.save();
             req.flash('success', "You have successfully registered to challenge. Good luck!");
             res.redirect("/challenges/" + req.params.id);
+        }
+    });
+});
+
+// VOTE route - > start voting
+router.get("/:id/vote", middleware.checkVoteStatus, function(req, res) {
+    Challenge.findById(req.params.id, function(err, foundChallenge) {
+        if (err || !foundChallenge) {
+            req.flash("error", err.message);
+            return res.redirect("back");
+        }
+        return res.render('challenges/vote', { challenge: foundChallenge });
+    });
+});
+
+// VOTE route -> add user's vote to data
+router.post("/:id/vote/", middleware.checkVoteStatus, function(req, res) {
+    Challenge.findById(req.params.id, function(err, foundChallenge) {
+        if (err) {
+            req.flash("error", err.message);
+            return res.redirect("back");
+        }
+        else {
+            var tempParticipant = foundChallenge.participants[Number(req.body.input)];
+            tempParticipant.score += 1;
+            foundChallenge.participants[Number(req.body.input)] = tempParticipant;
+            foundChallenge.save();
+            res.redirect("/challenges/" + foundChallenge._id + "/vote");
         }
     });
 });

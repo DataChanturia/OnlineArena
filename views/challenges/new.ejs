@@ -61,13 +61,11 @@
 </div>
 
 <script>
-    function getTomorrow(){
-        var tomorrow = new Date();
-        console.log(tomorrow);
-        var month = tomorrow.getMonth() + 1;
-        console.log(month);
-        var day = tomorrow.getDate() + 1;
-        var year = tomorrow.getFullYear();
+    function getToday(){
+        var today = new Date();
+        var month = today.getMonth() + 1;
+        var day = today.getDate();
+        var year = today.getFullYear();
         if(month < 10)
             month = '0' + month.toString();
         if(day < 10)
@@ -76,7 +74,7 @@
     }
     
     $(function(){
-        var minDate = getTomorrow();
+        var minDate = getToday();
         console.log(minDate);
         $('#startDate').attr('min', minDate);
         $('#startDate').val(minDate);

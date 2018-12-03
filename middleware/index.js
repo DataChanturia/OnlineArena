@@ -113,4 +113,35 @@ middlewareObj.checkParticipationStatus = function(req, res, next) {
     }
 };
 
+middlewareObj.checkVoteStatus = function(req, res, next) {
+    if (req.isAuthenticated()) {
+        Challenge.findById(req.params.id, function(err, foundChallenge) {
+            if (err) {
+                console.log(err || !foundChallenge);
+                res.redirect("back");
+            }
+            else {
+                if (foundChallenge.startDate.getTime() > (new Date()).getTime() ||
+                    foundChallenge.endDate.getTime() < (new Date()).getTime()) {
+                    req.flash("error", "Challenge is not in active mode, you can not vote");
+                    return res.redirect("back");
+                }
+                else {
+                    if (foundChallenge.participants.length >= foundChallenge.restrictions.minParticipants) {
+                        next();
+                    }
+                    else {
+                        req.flash("error", "Not allowed");
+                        return res.redirect("back");
+                    }
+                }
+            }
+        });
+    }
+    else {
+        req.flash("error", "You need to be logged in");
+        res.redirect("/login");
+    }
+};
+
 module.exports = middlewareObj;

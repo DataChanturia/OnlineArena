@@ -1,0 +1,39 @@
+<% include ../partials/header %>
+
+<div class="container">
+    <div class="row">
+        <h1 style="text-align: center;">Click one of images</h1>
+        <div style="width: 80%; margin: 25px auto">
+            <form id="form" action="/challenges/<%= challenge._id %>/vote/" method="POST">
+                <div class="col-md-6">
+                    <div class="thumbnail">
+                        <% var randNum1 =  Math.floor(Math.random()*challenge.participants.length); %>
+                        <img id="image1" style="width:100%;" src="<%= challenge.participants[randNum1].image %>">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="thumbnail">
+                         <% var randNum2 =  Math.floor(Math.random()*challenge.participants.length); %>
+                        <img id="image2" style="width:100%;" src="<%= challenge.participants[randNum2].image %>">
+                    </div>
+                </div>
+                <input type="hidden" name="input" id="input">
+            </form>
+            <a href="/challenges/<%= challenge._id %>">Go back</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    $( "#image1" ).click(function() {
+        $("#input").val(<%- randNum1 %>);
+        $("#form").submit();
+    });
+    
+    $( "#image2" ).click(function() {
+        $("#input").val(<%- randNum2 %>);
+        $("#form").submit();
+    });
+</script>
+
+<% include ../partials/footer %>

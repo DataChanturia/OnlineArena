@@ -14,7 +14,9 @@
                 </form>
             </div>
             <div class='col-md-6'>
-                <button class="btn-block btn btn-primary">Vote</button>    
+                <form action="/challenges/<%= challenge._id %>/vote/" method="GET">
+                    <button class="btn-block btn btn-primary">Vote</button>
+                </form>
             </div>
         </div>
         <div class="col-md-9">
@@ -92,10 +94,10 @@
             clearInterval(x);
             var displayText = "<strong>Challenge started</strong>";
             if(<%- challenge.participants.length %> < <%- challenge.restrictions.minParticipants %>){
-                displayText = "<strong>Challenge failed, not enough participants</strong>";
+                displayText = "<strong>Challenge in inactive mode, not enough participants</strong>";
             }
             if(<%- challenge.endDate.getTime() %> < (new Date()).getTime()){
-                document.getElementById("startCount").innerHTML = "<strong>Challenge ended</strong>";
+                displayText = "<strong>Challenge ended</strong>";
             }
             document.getElementById("startCount").innerHTML = displayText;
             return;
