@@ -1,0 +1,109 @@
+<% include ../partials/header %>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <p class="lead">OnlineArena</p>
+            <div class="list-group" style="text-align: center;">
+                <li class="list-group-item active" id="startCount"><strong>Challenge ended</strong></li>
+                <%
+                    var voteNum = 0;
+                    for(var i = 0; i < challenge.participants.length; i++){
+                        voteNum += challenge.participants[i].score;
+                    }
+                %>
+                <li class="list-group-item"><strong><%= challenge.participants.length %> participants / <%= voteNum %> votes</strong></li>
+            </div>
+            <div></div>
+            <h3 style="text-align: center; margin-top: 40px; margin-bottom: 20px"><strong>All participants:</strong></h3>
+            <% challenge.participants.forEach(function(participant){ %>
+                <div class="col-md-6">
+                    <div class="thumbnail">
+                        <img class="img-responsive" src="<%= participant.image %>">
+                        <div class='caption'>
+                            <p>Author: <a href='/users/<%= participant.user._id %>'><%= participant.user.username %></a></p>
+                        </div>
+                    </div>
+                </div> 
+            <% }); %>
+        </div>
+        <% const sortedWinners = challenge.participants.sort(function(part1, part2){return Number(part1.score) - Number(part2.score)}); %>
+        <div class="col-md-4">
+            <h2 style="text-align: center; margin-top: 40px; margin-bottom: 20px"><strong>Winners</strong></h2><br>
+            <% for (var i = sortedWinners.length - 1; i >= sortedWinners.length*0.8 - 1; i--){ %>
+                <%
+                    var placeText = ''
+                    if(i == sortedWinners.length - 1){
+                        placeText = "1st place";
+                    } else if(i == sortedWinners.length - 2){
+                        placeText = "2st place";
+                    } else if(i == sortedWinners.length - 3){
+                        placeText = "3st place";
+                    } else if(i < sortedWinners.length - 3 && i > sortedWinners.length *0.9){
+                        placeText = "Silver medal";
+                    } else {
+                        placeText = "Bronze medal";
+                    }
+                %>
+                <div class="col-md-4">
+                    <h4><strong><%= placeText %></strong></h4>
+                    <div class='caption'>
+                        <p>Author: <a href='/users/<%= sortedWinners[i].user._id %>'><%= sortedWinners[i].user.username %></a></p>
+                        <p>Score: <%= sortedWinners[i].score %></p>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="thumbnail">
+                        <img class="img-responsive" src="<%= sortedWinners[i].image %>">
+                    </div>
+                </div>
+            <% } %>
+        </div>
+        <div class="col-md-4">
+            <div class="thumbnail">
+                <img class="img-responsive" src="<%= challenge.coverImage %>">
+                <div class="caption-full">
+                    <h4><a><%= challenge.name %></a></h4>
+                    <p><%= challenge.description %></p>
+                    <p>
+                        <em>Created by <a href='/users/<%= challenge.author.id %>'><%= challenge.author.username %></a></em>
+                    </p>
+                    <% if(currentUser && challenge.author.id.equals(currentUser._id)){ %>
+                        <a class="btn btn-xs btn-warning" href="/challenges/<%= challenge._id %>/edit">Edit</a>
+                        <form id="delete-form" action="/challenges/<%= challenge._id %>?_method=DELETE" method="POST">
+                            <button class="btn btn-xs btn-danger">Delete</button>
+                        </form>
+                    <% } %>
+                </div>
+            </div>
+            <div class="well">
+                <div class="text-right">
+                    <a class="btn btn-success" href="/challenges/<%= challenge._id %>/comments/new">Add New Comment</a>
+                </div>
+                <hr>
+                <% for(var i = challenge.comments.length - 1; i >= 0; i--){ %>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                <strong><a href='/users/<%= challenge.comments[i].author.id %>'><%= challenge.comments[i].author.username %></a></strong>:
+                                <!--<span class="pull-right">10 days ago</span>-->
+                                 <%= challenge.comments[i].text %>
+                            </p>
+                            <% if(currentUser && challenge.comments[i].author.id.equals(currentUser._id)){ %>
+                                <a class="btn btn-xs btn-warning" 
+                                    href="/challenges/<%= challenge._id %>/comments/<%= challenge.comments[i]._id %>/edit">Edit
+                                </a>
+                                <form id="delete-form" action="/challenges/<%= challenge._id %>/comments/<%=challenge.comments[i]._id %>?_method=DELETE" method="POST">
+                                    <input type='submit' class="btn btn-xs btn-danger" value="Delete">
+                                </form>
+                                <p></p>
+                            <% } %>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% include ../partials/footer %>

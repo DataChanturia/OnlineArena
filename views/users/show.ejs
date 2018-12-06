@@ -2,8 +2,8 @@
 
 <div class="container">
     <div class='row'>
-        <div class='col-md-9'>
-            <h3><strong><%= user.username %>'s challenges:</strong></h3>
+        <div class='col-md-6'>
+            <h4><%= user.username %>'s challenges:</h4><br>
             <div class="row text-center" style="display: flex; flex-wrap: wrap;">
                 <% for(var i = 0; i < challenges.length; i++) { %>
                     <div class='col-md-3 col-sm-6'>
@@ -20,8 +20,28 @@
                 <% } %>
             </div>
         </div>
+        <div class='col-md-3'><br>
+        <div></div>
+            <h4><strong>Achievements:</strong></h4>
+            <% for(var i = 0; i < user.achievements.length; i++){ %>
+                <p>
+                    <strong>
+                        <%= user.achievements[i].award %>
+                    </strong>
+                    in <a href='/challenges/<%= user.achievements[i].challengeId %>'><%= user.achievements[i].challengeName %></a> --
+                    Total votes: <%= user.achievements[i].score %>
+                </p>
+            <% } %>
+        </div>
         <div class='col-md-3'>
             <h1><%= user.username %></h1>
+            <%
+                var totalPoints = 0;
+                user.achievements.forEach(function(achievement){
+                    totalPoints += achievement.pointsReceived;
+                });
+            %>
+            <p><strong>Total points: </strong><%= totalPoints %></p>
             <p><strong>Name: </strong><%= user.firstName + " " + user.lastName %> %></p>
             <p><strong>Birth year: </strong><%= user.birthYear %></p>
             <p><strong>Gender: </strong><%= user.gender %></p>
@@ -29,7 +49,7 @@
                 <img src='<%= user.avatar %>' alt='user profile image'>
                 <div class='caption'><a href='mailto:<%= user.email %>'><%= user.email %></a></div>
             </div>
-            <% if(currentUser._id == user.id){ %>
+            <% if(currentUser && currentUser._id == user.id){ %>
                 <a class="btn btn-xs btn-warning" href="/users/<%= currentUser._id %>/edit">Edit Info</a>
             <% } %>
         </div>

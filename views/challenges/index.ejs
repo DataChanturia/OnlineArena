@@ -26,9 +26,13 @@
                         <%= challenges[i].description %>
                     </p>
                     <p>
-                        <a href="/challenges/<%= challenges[i]._id %>/participate" class="btn btn-primary btn-sm">Participate</a>
-                        <a href="/challenges/<%= challenges[i]._id %>/vote" class="btn btn-primary btn-sm">Vote</a>
-                        <a href="/challenges/<%= challenges[i]._id %>" class="btn btn-primary btn-sm">More Info</a>
+                        <% if(challenges[i].ended == "true"){ %>
+                            <a href="/challenges/<%= challenges[i]._id %>/" class="btn btn-danger btn-sm">Challenge ended - See stats</a>
+                        <% } else { %>
+                            <a href="/challenges/<%= challenges[i]._id %>/participate" class="btn btn-primary btn-sm">Participate</a>
+                            <a href="/challenges/<%= challenges[i]._id %>/vote" class="btn btn-primary btn-sm">Vote</a>
+                            <a href="/challenges/<%= challenges[i]._id %>" class="btn btn-primary btn-sm">More Info</a>
+                        <% } %>
                     </p>
                 </div>
             </div>

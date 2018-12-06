@@ -9,6 +9,7 @@ var challengeSchema = new mongoose.Schema({
     type: String,
     startDate: Date,
     endDate: Date,
+    ended: { type: String, default: "false" },
     author: {
         id: {
             type: mongoose.Schema.Types.ObjectId,

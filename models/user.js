@@ -10,7 +10,14 @@ var UserSchema = new mongoose.Schema({
     firstName: String,
     lastName: String,
     birthYear: String,
-    gender: String
+    gender: String,
+    achievements: [{
+        challengeId: String,
+        challengeName: String,
+        score: Number,
+        pointsReceived: Number,
+        award: String
+    }]
 });
 
 UserSchema.plugin(passportLocalMongoose);

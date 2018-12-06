@@ -3,7 +3,8 @@ var router = express.Router();
 
 var middleware = require("../middleware");
 
-var Challenge = require("../models/challenge");
+var Challenge = require("../models/challenge"),
+    User = require("../models/user");
 
 // == FILE UPLOAD SETUP -- START ==
 var multer = require('multer');
@@ -101,15 +102,19 @@ router.get("/new", middleware.isLoggedIn, function(req, res) {
 
 // SHOW route -> shows more info about challenge
 router.get("/:id", function(req, res) {
-    Challenge.findById(req.params.id).populate("comments").exec(function(err, foundChallenge) {
+    Challenge.findById(req.params.id).populate("comments").populate("participants.user").exec(function(err, foundChallenge) {
         if (err || !foundChallenge) {
             req.flash("error", err.message);
             return res.redirect("back");
         }
         else {
-            //console.log(foundChallenge);
             // render show template with that challenge
-            res.render("challenges/show", { challenge: foundChallenge });
+            if (foundChallenge.ended == "true") {
+                res.render("challenges/showStats", { challenge: foundChallenge });
+            }
+            else {
+                res.render("challenges/show", { challenge: foundChallenge });
+            }
         }
     });
 });
@@ -117,12 +122,12 @@ router.get("/:id", function(req, res) {
 // EDIT route -> edit challenge
 router.get("/:id/edit", middleware.checkChallengeOwnership, function(req, res) {
     Challenge.findById(req.params.id, function(err, foundChallenge) {
-        if (err || !foundChallenge) {
-            console.log(err);
+        if (err || !foundChallenge || foundChallenge.ended == "true") {
+            req.flash("error", err.message);
+            return res.redirect("back");
         }
         else {
             res.render("challenges/edit", { challenge: foundChallenge });
-
         }
     });
 });
@@ -238,5 +243,62 @@ router.post("/:id/vote/", middleware.checkVoteStatus, function(req, res) {
         }
     });
 });
+
+// SHOW ended challenge route -> shows info about ended challenge
+router.get("/:id/showStats", function(req, res) {
+    Challenge.findById(req.params.id).populate("participants.user").populate("comments").exec(function(err, foundChallenge) {
+        if (err || !foundChallenge) {
+            req.flash("error", err.message);
+            return res.redirect("back");
+        }
+        else {
+            foundChallenge.ended = 'true';
+            foundChallenge.save();
+            const sortedWinners = foundChallenge.participants.sort(function(part1, part2) { return Number(part1.score) - Number(part2.score) });
+            for (var i = sortedWinners.length - 1; i >= sortedWinners.length * 0.8 - 1; i--) {
+                var placeText = '';
+                var placePoints = 1;
+                if (i == sortedWinners.length - 1) {
+                    placeText = "1st place";
+                    placePoints = 10 * foundChallenge.participants.length;
+                }
+                else if (i == sortedWinners.length - 2) {
+                    placeText = "2st place";
+                    placePoints = 9 * foundChallenge.participants.length;
+                }
+                else if (i == sortedWinners.length - 3) {
+                    placeText = "3st place";
+                    placePoints = 8 * foundChallenge.participants.length;
+                }
+                else if (i < sortedWinners.length - 3 && i > sortedWinners.length * 0.9) {
+                    placeText = "Silver medal";
+                    placePoints = 3 * foundChallenge.participants.length;
+                }
+                else {
+                    placeText = "Bronze medal";
+                    placePoints = 2 * foundChallenge.participants.length;
+                }
+                User.findById(foundChallenge.participants[i].user._id, function(err, foundUser) {
+                    if (err) {
+                        req.flash("error", err.message);
+                        return res.redirect("back");
+                    }
+                    else {
+                        var achievement = {};
+                        achievement.challengeId = foundChallenge._id;
+                        achievement.challengeName = foundChallenge.name;
+                        achievement.score = Number(sortedWinners[i].score);
+                        achievement.pointsReceived = Number(placePoints);
+                        achievement.award = placeText;
+                        foundUser.achievements.push(achievement);
+                        foundUser.save();
+                    }
+                });
+            }
+            res.render("challenges/showStats", { challenge: foundChallenge });
+        }
+    });
+});
+
 
 module.exports = router;
