@@ -15,7 +15,7 @@
                     <div class="thumbnail">
                          <% 
                             var randNum2 =  Math.floor(Math.random()*challenge.participants.length);
-                            while(randNum2 == randNum1){
+                            while(challenge.participants.length > 1 && randNum2 == randNum1){
                                 randNum2 =  Math.floor(Math.random()*challenge.participants.length);
                             }
                          %>
