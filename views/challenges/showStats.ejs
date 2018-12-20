@@ -3,7 +3,6 @@
 <div class="container">
     <div class="row">
         <div class="col-md-4">
-            <p class="lead">OnlineArena</p>
             <div class="list-group" style="text-align: center;">
                 <li class="list-group-item active" id="startCount"><strong>Challenge ended</strong></li>
                 <%
@@ -14,52 +13,6 @@
                 %>
                 <li class="list-group-item"><strong><%= challenge.participants.length %> participants / <%= voteNum %> votes</strong></li>
             </div>
-            <div></div>
-            <h3 style="text-align: center; margin-top: 40px; margin-bottom: 20px"><strong>All participants:</strong></h3>
-            <% challenge.participants.forEach(function(participant){ %>
-                <div class="col-md-6">
-                    <div class="thumbnail">
-                        <img class="img-responsive" src="<%= participant.image %>">
-                        <div class='caption'>
-                            <p>Author: <a href='/users/<%= participant.user._id %>'><%= participant.user.username %></a></p>
-                        </div>
-                    </div>
-                </div> 
-            <% }); %>
-        </div>
-        <% const sortedWinners = challenge.participants.sort(function(part1, part2){return Number(part1.score) - Number(part2.score)}); %>
-        <div class="col-md-4">
-            <h2 style="text-align: center; margin-top: 40px; margin-bottom: 20px"><strong>Winners</strong></h2><br>
-            <% for (var i = sortedWinners.length - 1; i >= sortedWinners.length*0.8 - 1; i--){ %>
-                <%
-                    var placeText = ''
-                    if(i == sortedWinners.length - 1){
-                        placeText = "1st place";
-                    } else if(i == sortedWinners.length - 2){
-                        placeText = "2st place";
-                    } else if(i == sortedWinners.length - 3){
-                        placeText = "3st place";
-                    } else if(i < sortedWinners.length - 3 && i > sortedWinners.length *0.9){
-                        placeText = "Silver medal";
-                    } else {
-                        placeText = "Bronze medal";
-                    }
-                %>
-                <div class="col-md-4">
-                    <h4><strong><%= placeText %></strong></h4>
-                    <div class='caption'>
-                        <p>Author: <a href='/users/<%= sortedWinners[i].user._id %>'><%= sortedWinners[i].user.username %></a></p>
-                        <p>Score: <%= sortedWinners[i].score %></p>
-                    </div>
-                </div>
-                <div class="col-md-8">
-                    <div class="thumbnail">
-                        <img class="img-responsive" src="<%= sortedWinners[i].image %>">
-                    </div>
-                </div>
-            <% } %>
-        </div>
-        <div class="col-md-4">
             <div class="thumbnail">
                 <img class="img-responsive" src="<%= challenge.coverImage %>">
                 <div class="caption-full">
@@ -102,6 +55,56 @@
                     </div>
                 <% } %>
             </div>
+        </div>
+        <div class="col-md-4">
+            <div></div>
+            <h3 style="text-align: center; margin-top: 40px; margin-bottom: 20px"><strong>All participants</strong></h3><br>
+            <div class="row" style="display:flex; flex-wrap: wrap;">
+                <% challenge.participants.forEach(function(participant){ %>
+                    <div class="col-md-6">
+                        <div class="thumbnail">
+                            <img class="img-responsive" src="<%= participant.image %>">
+                            <div class='caption'>
+                                <p>Author: <a href='/users/<%= participant.user._id %>'><%= participant.user.username %></a></p>
+                            </div>
+                        </div>
+                    </div> 
+                <% }); %>
+            </div>
+        </div>
+        <% const sortedWinners = challenge.participants.sort(function(part1, part2){return Number(part1.score) - Number(part2.score)}); %>
+        <div class="col-md-4">
+            <h3 style="text-align: center; margin-top: 40px; margin-bottom: 20px"><strong>Winners</strong></h3><br>
+            <% for (var i = sortedWinners.length - 1; i >= sortedWinners.length*0.8 - 1; i--){ %>
+                <%
+                    var placeText = ''
+                    if(i == sortedWinners.length - 1){
+                        placeText = "1st place";
+                    } else if(i == sortedWinners.length - 2){
+                        placeText = "2st place";
+                    } else if(i == sortedWinners.length - 3){
+                        placeText = "3st place";
+                    } else if(i < sortedWinners.length - 3 && i > sortedWinners.length *0.9){
+                        placeText = "Silver medal";
+                    } else {
+                        placeText = "Bronze medal";
+                    }
+                %>
+                <% if(sortedWinners.length > 0){ %>
+                    <div class="col-md-5">
+                        <h4><strong><%= placeText %></strong></h4>
+                        <div class='caption'>
+                            <p>Author: <a href='/users/<%= sortedWinners[i].user._id %>'><%= sortedWinners[i].user.username %></a></p>
+                            <p>Score: <%= sortedWinners[i].score - 1 %></p>
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <div class="thumbnail">
+                            <img class="img-responsive" src="<%= sortedWinners[i].image %>">
+                        </div>
+                    </div>
+                <% } %>
+            <% } %>
         </div>
     </div>
 </div>

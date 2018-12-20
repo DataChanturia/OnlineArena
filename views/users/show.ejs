@@ -2,37 +2,6 @@
 
 <div class="container">
     <div class='row'>
-        <div class='col-md-6'>
-            <h4><%= user.username %>'s challenges:</h4><br>
-            <div class="row text-center" style="display: flex; flex-wrap: wrap;">
-                <% for(var i = 0; i < challenges.length; i++) { %>
-                    <div class='col-md-3 col-sm-6'>
-                        <div class="thumbnail">
-                            <img style="width:100%;" src="<%= challenges[i].coverImage %>">
-                            <div class='caption'>
-                                <h4><%= challenges[i].name %></h4>
-                            </div>
-                            <p>
-                                <a href="/challenges/<%= challenges[i]._id %>" class="btn btn-primary">More Info</a>
-                            </p>
-                        </div>
-                    </div>
-                <% } %>
-            </div>
-        </div>
-        <div class='col-md-3'><br>
-        <div></div>
-            <h4><strong>Achievements:</strong></h4>
-            <% for(var i = 0; i < user.achievements.length; i++){ %>
-                <p>
-                    <strong>
-                        <%= user.achievements[i].award %>
-                    </strong>
-                    in <a href='/challenges/<%= user.achievements[i].challengeId %>'><%= user.achievements[i].challengeName %></a> --
-                    Total votes: <%= user.achievements[i].score %>
-                </p>
-            <% } %>
-        </div>
         <div class='col-md-3'>
             <h1><%= user.username %></h1>
             <%
@@ -52,6 +21,41 @@
             <% if(currentUser && currentUser._id == user.id){ %>
                 <a class="btn btn-xs btn-warning" href="/users/<%= currentUser._id %>/edit">Edit Info</a>
             <% } %>
+        </div>
+        <div style="text-align: center;" class='col-md-4'>
+            <h3>Achievements</h3>
+            <% for(var i = 0; i < user.achievements.length; i++){ %>
+                <p>
+                    <strong>
+                        <%= user.achievements[i].award %>
+                    </strong>
+                    in <a href='/challenges/<%= user.achievements[i].challengeId %>'><%= user.achievements[i].challengeName %></a> -
+                    Total votes: <%= user.achievements[i].score %>
+                </p>
+            <% } %>
+        </div>
+        <div class='col-md-5' style="word-wrap: break-word;">
+            <h3 style="text-align: center;">Followed by <%= user.username %></h3><br>
+            <div class="row text-center" style="display: flex; flex-wrap: wrap;">
+                <% for(var i = 0; i < challenges.length; i++) { %>
+                    <div class='col-md-3 col-sm-6'>
+                        <a href="/challenges/<%= challenges[i]._id %>"><h4><%= challenges[i].name %></h4></a>
+                    </div>
+                <% } %>
+            </div>
+            <h3 style="text-align: center;"><%= user.username %>'s challenges</h3><br>
+            <div class="row text-center" style="display: flex; flex-wrap: wrap;">
+                <% for(var i = 0; i < challenges.length; i++) { %>
+                    <div class='col-md-4 col-sm-6'>
+                        <div class="thumbnail">
+                            <img style="width:100%;" src="<%= challenges[i].coverImage %>">
+                            <div class='caption'>
+                                <a href="/challenges/<%= challenges[i]._id %>"><h4><%= challenges[i].name %></h4></a>
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
         </div>
     </div>
 </div>

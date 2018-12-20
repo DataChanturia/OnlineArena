@@ -278,22 +278,24 @@ router.get("/:id/showStats", function(req, res) {
                     placeText = "Bronze medal";
                     placePoints = 2 * foundChallenge.participants.length;
                 }
-                User.findById(foundChallenge.participants[i].user._id, function(err, foundUser) {
-                    if (err) {
-                        req.flash("error", err.message);
-                        return res.redirect("back");
-                    }
-                    else {
-                        var achievement = {};
-                        achievement.challengeId = foundChallenge._id;
-                        achievement.challengeName = foundChallenge.name;
-                        achievement.score = Number(sortedWinners[i].score);
-                        achievement.pointsReceived = Number(placePoints);
-                        achievement.award = placeText;
-                        foundUser.achievements.push(achievement);
-                        foundUser.save();
-                    }
-                });
+                if (foundChallenge.participants.length > 0) {
+                    User.findById(foundChallenge.participants[i].user._id, function(err, foundUser) {
+                        if (err) {
+                            req.flash("error", err.message);
+                            return res.redirect("back");
+                        }
+                        else {
+                            var achievement = {};
+                            achievement.challengeId = foundChallenge._id;
+                            achievement.challengeName = foundChallenge.name;
+                            achievement.score = Number(sortedWinners[i].score);
+                            achievement.pointsReceived = Number(placePoints);
+                            achievement.award = placeText;
+                            foundUser.achievements.push(achievement);
+                            foundUser.save();
+                        }
+                    });
+                }
             }
             res.render("challenges/showStats", { challenge: foundChallenge });
         }

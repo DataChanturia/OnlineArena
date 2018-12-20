@@ -93,7 +93,7 @@ middlewareObj.checkParticipationStatus = function(req, res, next) {
                                     next();
                                 }
                                 else {
-                                    req.flash("error", "Restrictions does not allow you to participate");
+                                    req.flash("error", "Restrictions do not allow you to participate");
                                     res.redirect("back");
                                 }
                             }
