@@ -303,4 +303,26 @@ router.get("/:id/showStats", function(req, res) {
 });
 
 
+//Follow/Unfollow challenge
+router.get("/:id/follow", middleware.isLoggedIn, function(req, res) {
+    User.findById(req.user._id, function(err, foundUser) {
+        if (err) {
+            req.flash("error", err.message);
+            return res.redirect("back");
+        }
+        else {
+            const index = foundUser.following.indexOf(req.params.id);
+            if (index < 0) {
+                foundUser.following.push(req.params.id);
+                foundUser.save();
+            }
+            else {
+                foundUser.following.splice(index, 1);
+                foundUser.save();
+            }
+            res.redirect("/challenges/" + req.params.id);
+        }
+    });
+});
+
 module.exports = router;

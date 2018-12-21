@@ -3,7 +3,24 @@
 <div class="container">
     <div class="row" style="display:flex; flex-wrap: wrap;">
         <div class="col-md-3">
-            <p class="lead">OnlineArena</p>
+            <div class='row'>
+                <div class='col-md-7'>
+                    <p class="lead">OnlineArena</p>
+                </div>
+                <div class='col-md-5'>
+                    <% 
+                        var followed = false;
+                        if(currentUser && currentUser.following.indexOf(challenge._id) >= 0){
+                            followed = true;
+                        }
+                    %>
+                    <% if(followed){ %>
+                        <a href="/challenges/<%= challenge._id %>/follow" id='followBtn' class='btn btn-primary btn-block'>Unfollow</a>
+                    <% }else if(currentUser){ %>
+                        <a href="/challenges/<%= challenge._id %>/follow" id='followBtn' class='btn btn-primary btn-block'>Follow</a>
+                    <% } %>
+                </div>
+            </div>
             <div class="list-group" style="text-align: center;">
                 <li class="list-group-item active" id="startCount"><strong>loading...</strong></li>
                 <li class="list-group-item"><strong>Registered: <%= challenge.participants.length %> Required: <%= challenge.restrictions.minParticipants %></strong></li>

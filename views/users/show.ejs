@@ -21,6 +21,15 @@
             <% if(currentUser && currentUser._id == user.id){ %>
                 <a class="btn btn-xs btn-warning" href="/users/<%= currentUser._id %>/edit">Edit Info</a>
             <% } %>
+            <br>
+            <h3 style="text-align: center;">Followed by <%= user.username %></h3>
+            <div class="row text-center" style="display: flex; flex-wrap: wrap;">
+                <% for(var i = 0; i < followedChallenges.length; i++) { %>
+                    <div class='col-md-12 col-sm-12'>
+                        <a href="/challenges/<%= followedChallenges[i]._id %>"><h4><%= followedChallenges[i].name %></h4></a>
+                    </div>
+                <% } %>
+            </div>
         </div>
         <div style="text-align: center;" class='col-md-4'>
             <h3>Achievements</h3>
@@ -35,14 +44,6 @@
             <% } %>
         </div>
         <div class='col-md-5' style="word-wrap: break-word;">
-            <h3 style="text-align: center;">Followed by <%= user.username %></h3><br>
-            <div class="row text-center" style="display: flex; flex-wrap: wrap;">
-                <% for(var i = 0; i < challenges.length; i++) { %>
-                    <div class='col-md-3 col-sm-6'>
-                        <a href="/challenges/<%= challenges[i]._id %>"><h4><%= challenges[i].name %></h4></a>
-                    </div>
-                <% } %>
-            </div>
             <h3 style="text-align: center;"><%= user.username %>'s challenges</h3><br>
             <div class="row text-center" style="display: flex; flex-wrap: wrap;">
                 <% for(var i = 0; i < challenges.length; i++) { %>

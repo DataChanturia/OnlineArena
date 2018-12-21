@@ -13,6 +13,19 @@
                 %>
                 <li class="list-group-item"><strong><%= challenge.participants.length %> participants / <%= voteNum %> votes</strong></li>
             </div>
+            <div>
+                <% 
+                    var followed = false;
+                    if(currentUser && currentUser.following.indexOf(challenge._id) >= 0){
+                        followed = true;
+                    }
+                %>
+                <% if(followed){ %>
+                    <a href="/challenges/<%= challenge._id %>/follow" id='followBtn' class='btn btn-primary btn-block'>Unfollow</a>
+                <% }else if(currentUser){ %>
+                    <a href="/challenges/<%= challenge._id %>/follow" id='followBtn' class='btn btn-primary btn-block'>Follow</a>
+                <% } %>
+            </div><br>
             <div class="thumbnail">
                 <img class="img-responsive" src="<%= challenge.coverImage %>">
                 <div class="caption-full">

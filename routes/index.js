@@ -83,7 +83,13 @@ router.get('/users/:id', function(req, res) {
                 req.flash("error", err.message);
                 return res.redirect("back");
             }
-            res.render("users/show", { user: foundUser, challenges: foundChallenges });
+            Challenge.find({ _id: { $in: foundUser.following } }, function(err, followedChallenges) {
+                if (err) {
+                    req.flash("error", err.message);
+                    return res.redirect("back");
+                }
+                res.render("users/show", { user: foundUser, challenges: foundChallenges, followedChallenges: followedChallenges });
+            });
         });
     });
 });
