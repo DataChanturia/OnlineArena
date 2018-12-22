@@ -30,7 +30,7 @@
                 <a class="btn btn-xs btn-warning" href="/users/<%= currentUser._id %>/edit">Edit Info</a>
             <% } %>
             <br>
-            <h3 style="text-align: center;">Followed by <%= user.username %></h3>
+            <h3 style="text-align: center;">Challenges followed by <%= user.username %>:</h3>
             <div class="row text-center" style="display: flex; flex-wrap: wrap;">
                 <% for(var i = 0; i < followedChallenges.length; i++) { %>
                     <div class='col-md-12 col-sm-12'>
