@@ -15,7 +15,7 @@
         <div class='col-md-12'>
             <h3><%= message %></h3>
         </div>
-        <% challenges = challenges.sort(function(part1, part2){return Number(part2.startDate) - Number(part1.startDate)}); %>
+        <% challenges = challenges.sort(function(part1, part2){return Number(part2.createDate) - Number(part1.createDate)}); %>
         <% for(var i = 0; i < challenges.length; i++) { %>
             <div class='col-md-3 col-sm-6'>
                 <div class="thumbnail">

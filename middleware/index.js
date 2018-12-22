@@ -128,23 +128,35 @@ middlewareObj.checkVoteStatus = function(req, res, next) {
                 }
                 else {
                     if (foundChallenge.participants.length >= foundChallenge.restrictions.minParticipants) {
-                        if (foundChallenge.type == "ongoing") {
+                        if (foundChallenge.type == "preregister") {
                             if (foundChallenge.participants.length > 0) {
                                 for (var i = 0; i < foundChallenge.participants.length; i++) {
                                     if (foundChallenge.participants[i].user.equals(req.user._id)) {
-                                        return next();
+                                        if (foundChallenge.voteRestrictions.gender == "both" || req.user.gender == foundChallenge.voteRestrictions.gender) {
+                                            return next();
+                                        }
+                                        else {
+                                            req.flash("error", "Vote restrictions do not allow to participate");
+                                            return res.redirect("back");
+                                        }
                                     }
                                 }
-                                req.flash("error", "Ongoing challenge requires you to register first");
+                                req.flash("error", "Preregister challenge requires you to register first");
                                 return res.redirect("back");
                             }
                             else {
-                                req.flash("error", "Ongoing challenge requires you to register first");
+                                req.flash("error", "Preregister challenge requires you to register first");
                                 return res.redirect("back");
                             }
                         }
                         else {
-                            next();
+                            if (foundChallenge.voteRestrictions.gender == "both" || req.user.gender == foundChallenge.voteRestrictions.gender) {
+                                return next();
+                            }
+                            else {
+                                req.flash("error", "Vote restrictions do not allow to participate");
+                                return res.redirect("back");
+                            }
                         }
                     }
                     else {

@@ -7,6 +7,7 @@ var challengeSchema = new mongoose.Schema({
     imageId: String,
     description: String,
     type: String,
+    createDate: { type: Date, default: Date.now },
     startDate: Date,
     endDate: Date,
     ended: { type: String, default: "false" },
@@ -32,6 +33,9 @@ var challengeSchema = new mongoose.Schema({
         firstName: String,
         lastName: String,
         minParticipants: Number
+    },
+    voteRestrictions: {
+        gender: String
     }
 });
 

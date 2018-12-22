@@ -94,6 +94,10 @@ router.post("/", middleware.isLoggedIn, upload.single('challenge[coverImage]'), 
             lastName: req.body.lastName,
             minParticipants: req.body.minParticipants
         };
+        req.body.challenge.voteRestrictions = {
+            gender: req.body.vgender
+        };
+        req.body.createDate = Date.now();
         Challenge.create(req.body.challenge, function(err, challenge) {
             if (err) {
                 req.flash('error', err.message);
@@ -284,7 +288,7 @@ router.get("/:id/showStats", function(req, res) {
             req.flash("error", "vote error encountered");
             return res.redirect("back");
         }
-        else if (foundChallenge.ended) {
+        else if (foundChallenge.ended == 'true') {
             return res.redirect("/challenges/" + req.params.id);
         }
         else {
@@ -322,11 +326,13 @@ router.get("/:id/showStats", function(req, res) {
                     var achievement = {};
                     achievement.challengeId = foundChallenge._id;
                     achievement.challengeName = foundChallenge.name;
-                    achievement.score = Number(sortedWinners[i].score);
                     achievement.pointsReceived = Number(placePoints);
                     achievement.award = placeText;
-                    sortedWinners[i].user.achievements.push(achievement);
-                    sortedWinners[i].user.save();
+                    if (sortedWinners[i]) {
+                        achievement.score = Number(sortedWinners[i].score);
+                        sortedWinners[i].user.achievements.push(achievement);
+                        sortedWinners[i].user.save();
+                    }
                 }
             }
             res.render("challenges/showStats", { challenge: foundChallenge });
