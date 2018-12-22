@@ -33,6 +33,18 @@
                 
                 <li class="list-group-item"><strong>Votes received: <%= voteNum %></strong></li>
             </div>
+            <div class='col-md-12'>
+                <p><strong>tags:</strong>
+                    <%
+                        const tags = challenge.tags.split(" ");
+                        for(var i = 0; i < tags.length; i++){
+                    %>
+                            #<%= tags[i] %>
+                    <%
+                        }
+                    %>
+                </p><br>
+            </div>
             <div class='col-md-6'>
                 <form action="/challenges/<%= challenge._id %>/participate/" method="GET">
                     <button class="btn-block btn btn-success">Participate</button>

@@ -36,7 +36,16 @@ router.get("/", function(req, res) {
     var message = '';
     if (req.query.search) {
         const regex = new RegExp(req.query.search.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'gi');
-        Challenge.find({ $and: [{ name: regex }] }, function(err, allChallenges) {
+        var ended;
+        if (req.query.search.includes("ended")) {
+            ended = "true";
+        }
+        else if (req.query.search.includes("active")) {
+            ended = "false";
+        }
+        var searchObj = [{ name: regex }, { ended: ended }, { tags: regex }];
+
+        Challenge.find({ $or: searchObj }, function(err, allChallenges) {
             if (err) {
                 req.flash("error", err.message);
                 res.redirect("back");
@@ -104,7 +113,7 @@ router.get("/new", middleware.isLoggedIn, function(req, res) {
 router.get("/:id", function(req, res) {
     Challenge.findById(req.params.id).populate("comments").populate("participants.user").exec(function(err, foundChallenge) {
         if (err || !foundChallenge) {
-            req.flash("error", err.message);
+            req.flash("error", "error finding challenge");
             return res.redirect("back");
         }
         else {
@@ -123,7 +132,7 @@ router.get("/:id", function(req, res) {
 router.get("/:id/edit", middleware.checkChallengeOwnership, function(req, res) {
     Challenge.findById(req.params.id, function(err, foundChallenge) {
         if (err || !foundChallenge || foundChallenge.ended == "true") {
-            req.flash("error", err.message);
+            req.flash("error", "not allowed");
             return res.redirect("back");
         }
         else {
@@ -155,6 +164,7 @@ router.put("/:id", middleware.checkChallengeOwnership, upload.single("challenge[
             }
             foundChallenge.name = req.body.challenge.name;
             foundChallenge.description = req.body.challenge.description;
+            foundChallenge.tags = req.body.challenge.tags;
             if (imageId) {
                 foundChallenge.imageId = imageId;
                 foundChallenge.coverImage = coverImage;
@@ -223,7 +233,25 @@ router.get("/:id/vote", middleware.checkVoteStatus, function(req, res) {
             req.flash("error", err.message);
             return res.redirect("back");
         }
-        return res.render('challenges/vote', { challenge: foundChallenge });
+        var randNum1 = Math.floor(Math.random() * foundChallenge.participants.length);
+        var randNum2 = Math.floor(Math.random() * foundChallenge.participants.length);
+        while (foundChallenge.participants.length > 1 && randNum2 == randNum1) {
+            randNum2 = Math.floor(Math.random() * foundChallenge.participants.length);
+        }
+        var chosen = Math.floor(Math.random() * 2);
+        if (chosen == 0) {
+            chosen = randNum1;
+        }
+        else {
+            chosen = randNum2;
+        }
+
+        var tempParticipant = foundChallenge.participants[chosen];
+        tempParticipant.score += 1;
+        foundChallenge.participants[chosen] = tempParticipant;
+        foundChallenge.save();
+
+        return res.render('challenges/vote', { challenge: foundChallenge, randNum1: randNum1, randNum2: randNum2, chosen: chosen });
     });
 });
 
@@ -235,9 +263,14 @@ router.post("/:id/vote/", middleware.checkVoteStatus, function(req, res) {
             return res.redirect("back");
         }
         else {
+            var prevParticipant = foundChallenge.participants[Number(req.body.chosen)];
+            prevParticipant.score -= 1;
+            foundChallenge.participants[Number(req.body.chosen)] = prevParticipant;
+
             var tempParticipant = foundChallenge.participants[Number(req.body.input)];
             tempParticipant.score += 1;
             foundChallenge.participants[Number(req.body.input)] = tempParticipant;
+
             foundChallenge.save();
             res.redirect("/challenges/" + foundChallenge._id + "/vote");
         }
@@ -248,8 +281,11 @@ router.post("/:id/vote/", middleware.checkVoteStatus, function(req, res) {
 router.get("/:id/showStats", function(req, res) {
     Challenge.findById(req.params.id).populate("participants.user").populate("comments").exec(function(err, foundChallenge) {
         if (err || !foundChallenge) {
-            req.flash("error", err.message);
+            req.flash("error", "vote error encountered");
             return res.redirect("back");
+        }
+        else if (foundChallenge.ended) {
+            return res.redirect("/challenges/" + req.params.id);
         }
         else {
             foundChallenge.ended = 'true';
@@ -278,23 +314,19 @@ router.get("/:id/showStats", function(req, res) {
                     placeText = "Bronze medal";
                     placePoints = 2 * foundChallenge.participants.length;
                 }
-                if (foundChallenge.participants.length > 0) {
-                    User.findById(foundChallenge.participants[i].user._id, function(err, foundUser) {
-                        if (err) {
-                            req.flash("error", err.message);
-                            return res.redirect("back");
-                        }
-                        else {
-                            var achievement = {};
-                            achievement.challengeId = foundChallenge._id;
-                            achievement.challengeName = foundChallenge.name;
-                            achievement.score = Number(sortedWinners[i].score);
-                            achievement.pointsReceived = Number(placePoints);
-                            achievement.award = placeText;
-                            foundUser.achievements.push(achievement);
-                            foundUser.save();
-                        }
-                    });
+                if (err) {
+                    req.flash("error", err.message);
+                    return res.redirect("back");
+                }
+                else {
+                    var achievement = {};
+                    achievement.challengeId = foundChallenge._id;
+                    achievement.challengeName = foundChallenge.name;
+                    achievement.score = Number(sortedWinners[i].score);
+                    achievement.pointsReceived = Number(placePoints);
+                    achievement.award = placeText;
+                    sortedWinners[i].user.achievements.push(achievement);
+                    sortedWinners[i].user.save();
                 }
             }
             res.render("challenges/showStats", { challenge: foundChallenge });

@@ -11,7 +11,7 @@ var UserSchema = new mongoose.Schema({
     lastName: String,
     birthYear: String,
     gender: String,
-    interests: String,
+    interests: { type: String, default: "" },
     following: [{ type: mongoose.Schema.Types.ObjectId, ref: "Challenge" }],
     achievements: [{
         challengeId: String,

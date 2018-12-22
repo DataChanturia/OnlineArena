@@ -34,6 +34,16 @@
                     <p>
                         <em>Created by <a href='/users/<%= challenge.author.id %>'><%= challenge.author.username %></a></em>
                     </p>
+                    <p><strong>tags:</strong>
+                        <%
+                            const tags = challenge.tags.split(" ");
+                            for(var i = 0; i < tags.length; i++){
+                        %>
+                                #<%= tags[i] %>
+                        <%
+                            }
+                        %>
+                    </p>
                     <% if(currentUser && challenge.author.id.equals(currentUser._id)){ %>
                         <a class="btn btn-xs btn-warning" href="/challenges/<%= challenge._id %>/edit">Edit</a>
                         <form id="delete-form" action="/challenges/<%= challenge._id %>?_method=DELETE" method="POST">
@@ -108,7 +118,7 @@
                         <h4><strong><%= placeText %></strong></h4>
                         <div class='caption'>
                             <p>Author: <a href='/users/<%= sortedWinners[i].user._id %>'><%= sortedWinners[i].user.username %></a></p>
-                            <p>Score: <%= sortedWinners[i].score - 1 %></p>
+                            <p>Score: <%= sortedWinners[i].score %></p>
                         </div>
                     </div>
                     <div class="col-md-7">

@@ -7,22 +7,16 @@
             <form id="form" action="/challenges/<%= challenge._id %>/vote/" method="POST">
                 <div class="col-md-6">
                     <div class="thumbnail">
-                        <% var randNum1 =  Math.floor(Math.random()*challenge.participants.length); %>
                         <img id="image1" style="width:100%;" src="<%= challenge.participants[randNum1].image %>">
                     </div>
                 </div>
                 <div class="col-md-6 vertical">
                     <div class="thumbnail">
-                         <% 
-                            var randNum2 =  Math.floor(Math.random()*challenge.participants.length);
-                            while(challenge.participants.length > 1 && randNum2 == randNum1){
-                                randNum2 =  Math.floor(Math.random()*challenge.participants.length);
-                            }
-                         %>
                         <img id="image2" style="width:100%;" src="<%= challenge.participants[randNum2].image %>">
                     </div>
                 </div>
                 <input type="hidden" name="input" id="input">
+                <input type="hidden" name="chosen" value="<%= chosen %>">
             </form>
         </div>
     </div>

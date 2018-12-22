@@ -24,7 +24,7 @@ var challengeSchema = new mongoose.Schema({
         score: { type: Number, default: 0 },
         image: String
     }],
-    tags: [{ type: String }],
+    tags: { type: String, default: "" },
     restrictions: {
         gender: String,
         minAge: Number,

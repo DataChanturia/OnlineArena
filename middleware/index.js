@@ -128,7 +128,24 @@ middlewareObj.checkVoteStatus = function(req, res, next) {
                 }
                 else {
                     if (foundChallenge.participants.length >= foundChallenge.restrictions.minParticipants) {
-                        next();
+                        if (foundChallenge.type == "ongoing") {
+                            if (foundChallenge.participants.length > 0) {
+                                for (var i = 0; i < foundChallenge.participants.length; i++) {
+                                    if (foundChallenge.participants[i].user.equals(req.user._id)) {
+                                        return next();
+                                    }
+                                }
+                                req.flash("error", "Ongoing challenge requires you to register first");
+                                return res.redirect("back");
+                            }
+                            else {
+                                req.flash("error", "Ongoing challenge requires you to register first");
+                                return res.redirect("back");
+                            }
+                        }
+                        else {
+                            next();
+                        }
                     }
                     else {
                         req.flash("error", "Not allowed");

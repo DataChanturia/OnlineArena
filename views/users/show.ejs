@@ -14,6 +14,14 @@
             <p><strong>Name: </strong><%= user.firstName + " " + user.lastName %> %></p>
             <p><strong>Birth year: </strong><%= user.birthYear %></p>
             <p><strong>Gender: </strong><%= user.gender %></p>
+            <p><strong>Interests:</strong>
+                <%
+                    const interests = user.interests.split(" ");
+                    for(var i = 0; i < interests.length; i++){
+                %>
+                    #<%= interests[i] %>
+                <% } %>
+            </p>
             <div class='thumbnail'>
                 <img src='<%= user.avatar %>' alt='user profile image'>
                 <div class='caption'><a href='mailto:<%= user.email %>'><%= user.email %></a></div>
