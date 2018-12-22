@@ -7,8 +7,11 @@ var middleware = require("../middleware");
 var User = require("../models/user"),
     Challenge = require("../models/challenge");
 
+// router.get("/", function(req, res) {
+//     res.render("landing");
+// });
 router.get("/", function(req, res) {
-    res.render("landing");
+    res.redirect("/challenges");
 });
 
 // ================
