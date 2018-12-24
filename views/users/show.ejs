@@ -2,8 +2,12 @@
 
 <div class="container">
     <div class='row'>
-        <div class='col-md-3'>
+        <div class='col-md-3 centeredText'>
             <h1><%= user.username %></h1>
+            <div class='thumbnail'>
+                <img style="width: 50%" src='<%= user.avatar %>' alt='user profile image'>
+                <div class='caption centeredText'><a href='mailto:<%= user.email %>'><%= user.email %></a></div>
+            </div>
             <%
                 var totalPoints = 0;
                 user.achievements.forEach(function(achievement){
@@ -22,10 +26,6 @@
                     #<%= interests[i] %>
                 <% } %>
             </p>
-            <div class='thumbnail'>
-                <img src='<%= user.avatar %>' alt='user profile image'>
-                <div class='caption'><a href='mailto:<%= user.email %>'><%= user.email %></a></div>
-            </div>
             <% if(currentUser && currentUser._id == user.id){ %>
                 <a class="btn btn-xs btn-warning" href="/users/<%= currentUser._id %>/edit">Edit Info</a>
             <% } %>
