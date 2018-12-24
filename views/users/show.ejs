@@ -5,7 +5,7 @@
         <div class='col-md-3 centeredText'>
             <h1><%= user.username %></h1>
             <div class='thumbnail'>
-                <img style="width: 50%" src='<%= user.avatar %>' alt='user profile image'>
+                <img id='profileImage' src='<%= user.avatar %>' alt='user profile image'>
                 <div class='caption centeredText'><a href='mailto:<%= user.email %>'><%= user.email %></a></div>
             </div>
             <%
