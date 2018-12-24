@@ -215,18 +215,24 @@ router.get("/:id/participate", middleware.checkParticipationStatus, function(req
 });
 
 // REGISTER route -> register user to challenge
-router.post("/:id/participate/:userId", middleware.checkParticipationStatus, function(req, res) {
-    Challenge.findById(req.params.id, function(err, foundChallenge) {
+router.post("/:id/participate/:userId", middleware.checkParticipationStatus, upload.single('image'), function(req, res) {
+    cloudinary.v2.uploader.upload(req.file.path, function(err, result) {
         if (err) {
-            req.flash("error", err.message);
-            return res.redirect("back");
+            req.flash('error', err.message);
+            return res.redirect('back');
         }
-        else {
-            foundChallenge.participants.push({ user: req.user.id, score: 0, image: req.body.image });
-            foundChallenge.save();
-            req.flash('success', "You have successfully registered to challenge. Good luck!");
-            res.redirect("/challenges/" + req.params.id);
-        }
+        Challenge.findById(req.params.id, function(err, foundChallenge) {
+            if (err) {
+                req.flash("error", err.message);
+                return res.redirect("back");
+            }
+            else {
+                foundChallenge.participants.push({ user: req.user.id, score: 0, image: result.secure_url, imageId: result.public_id });
+                foundChallenge.save();
+                req.flash('success', "You have successfully registered to challenge. Good luck!");
+                res.redirect("/challenges/" + req.params.id);
+            }
+        });
     });
 });
 

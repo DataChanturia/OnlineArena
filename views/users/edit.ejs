@@ -4,7 +4,7 @@
     <div class="row">
         <h1 style="text-align: center;">Edit profile</h1>
         <div style="width: 30%; margin: 25px auto">
-            <form action="/users/<%= user._id %>?_method=PUT" method="POST">
+            <form action="/users/<%= user._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
                 <div class='form-group' >
                     <input class='form-control' type="text" name="user[firstName]" placeholder="first name" value="<%= user.firstName %>">
                 </div>
@@ -15,7 +15,9 @@
                     <input class='form-control' type="number" name="user[birthYear]" placeholder="year of birth" value="<%= user.birthYear %>">
                 </div>
                 <div class='form-group' >
-                    <input class='form-control' type="text" name="user[avatar]" placeholder="copy image location" value="<%= user.avatar %>">
+                    <!--<input class='form-control' type="text" name="user[avatar]" placeholder="copy image location" value="<%= user.avatar %>">-->
+                    <label for="image">Profile image</label>
+                    <input type='file' id='image' name='user[avatar]' accept='image/*'>
                 </div>
                 <div class='form-group' >
                     <textarea lass='form-control' name="user[interests]" 

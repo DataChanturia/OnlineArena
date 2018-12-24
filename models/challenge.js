@@ -23,7 +23,8 @@ var challengeSchema = new mongoose.Schema({
     participants: [{
         user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
         score: { type: Number, default: 0 },
-        image: String
+        image: String,
+        imageId: String
     }],
     tags: { type: String, default: "" },
     restrictions: {

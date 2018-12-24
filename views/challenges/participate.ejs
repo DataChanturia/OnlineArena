@@ -4,9 +4,11 @@
     <div class="row">
         <h1 style="text-align: center;">Add the image in "<%= challenge.name %>" challenge</h1>
         <div style="width: 30%; margin: 25px auto">
-            <form action="/challenges/<%= challenge._id %>/participate/<%= currentUser._id %>" method="POST">
+            <form action="/challenges/<%= challenge._id %>/participate/<%= currentUser._id %>" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
-                    <input class="form-control" type='text' name='image' placeholder='enter image location'>
+                    <!--<input class="form-control" type='text' name='image' placeholder='enter image location'>-->
+                    <label for="image">Upload image: </label>
+                    <input type='file' id='image' name='image' accept='image/*' required>
                 </div>
                 <div class="form-group">
                     <button class="btn btn-lg btn-primary btn-block">Submit</button>
