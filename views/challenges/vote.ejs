@@ -2,17 +2,17 @@
 
 <div class="container">
     <div class="row">
-        <h1 style="text-align: center;">Click one of images or <a href="/challenges/<%= challenge._id %>">Quit</a></h1>
-        <div style="width: 80%; margin: 25px auto">
+        <h1 class='centeredText'>Click one of images or <a href="/challenges/<%= challenge._id %>">Quit</a></h1>
+        <div class='voteDiv'>
             <form id="form" action="/challenges/<%= challenge._id %>/vote/" method="POST">
                 <div class="col-md-6">
                     <div class="thumbnail">
-                        <img id="image1" style="width:100%;" src="<%= challenge.participants[randNum1].image %>">
+                        <img id="image1" class='fullWidth' src="<%= challenge.participants[randNum1].image %>">
                     </div>
                 </div>
                 <div class="col-md-6 vertical">
                     <div class="thumbnail">
-                        <img id="image2" style="width:100%;" src="<%= challenge.participants[randNum2].image %>">
+                        <img class='fullWidth' id="image2" src="<%= challenge.participants[randNum2].image %>">
                     </div>
                 </div>
                 <input type="hidden" name="input" id="input">

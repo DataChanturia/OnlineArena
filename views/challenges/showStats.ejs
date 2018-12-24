@@ -3,7 +3,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-4">
-            <div class="list-group" style="text-align: center;">
+            <div class="list-group centeredText">
                 <li class="list-group-item active" id="startCount"><strong>Challenge ended</strong></li>
                 <%
                     var voteNum = 0;
@@ -81,8 +81,8 @@
         </div>
         <div class="col-md-4">
             <div></div>
-            <h3 style="text-align: center; margin-top: 40px; margin-bottom: 20px"><strong>All participants</strong></h3><br>
-            <div class="row" style="display:flex; flex-wrap: wrap;">
+            <h3 class='h3Centered'><strong>All participants</strong></h3><br>
+            <div class="row alignRows">
                 <% challenge.participants.forEach(function(participant){ %>
                     <div class="col-md-6">
                         <div class="thumbnail">
@@ -97,7 +97,7 @@
         </div>
         <% const sortedWinners = challenge.participants.sort(function(part1, part2){return Number(part1.score) - Number(part2.score)}); %>
         <div class="col-md-4">
-            <h3 style="text-align: center; margin-top: 40px; margin-bottom: 20px"><strong>Winners</strong></h3><br>
+            <h3 class='h3Centered'><strong>Winners</strong></h3><br>
             <% for (var i = sortedWinners.length - 1; i >= sortedWinners.length*0.8 - 1; i--){ %>
                 <%
                     var placeText = ''

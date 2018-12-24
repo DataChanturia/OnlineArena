@@ -1,15 +1,3 @@
-# OnlineArena
+# Online Arena
 
-# github commands for me:
-    # github setup
-    sudo apt-get install git
-    git config --global user.name "dchan13"
-    git config --global user.email "davidchanturia13@gmail.com"
-    git init ../online_arena
-    
-    # github daily
-    git pull origin master
-    git add --all
-    git commit -m "commit message"
-    git push origin master
-    
+Platform of online challenges for visual content

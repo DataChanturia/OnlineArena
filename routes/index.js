@@ -86,12 +86,12 @@ router.get("/login", function(req, res) {
 
 // handle login logic
 router.post("/login", passport.authenticate("local", { failureRedirect: "/login" }), function(req, res) {
-    if (req.body.referer.includes("/login")) {
-        return res.redirect("/challenges");
-    }
-    else {
-        res.redirect(req.body.referer);
-    }
+    // if (req.body.referer.includes("/challenges")) {
+    return res.redirect("/challenges");
+    // }
+    //else {
+    //   res.redirect(req.body.referer);
+    //}
 });
 
 // logout route

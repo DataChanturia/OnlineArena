@@ -13,3 +13,32 @@
 body {
     word-wrap: break-word;
 }
+
+.centeredText {
+    text-align: center;
+}
+
+.inputDiv {
+    width: 30%;
+    margin: 25px auto;
+}
+
+.fullWidth {
+    width: 100%;
+}
+
+.alignRows {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.h3Centered {
+    text-align: center;
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+
+.voteDiv {
+    width: 80%;
+    margin: 25px auto;
+}

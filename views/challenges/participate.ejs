@@ -2,8 +2,8 @@
 
 <div class="container">
     <div class="row">
-        <h1 style="text-align: center;">Add the image in "<%= challenge.name %>" challenge</h1>
-        <div style="width: 30%; margin: 25px auto">
+        <h1 class='centeredText'>Add the image in "<%= challenge.name %>" challenge</h1>
+        <div class='inputDiv'>
             <form action="/challenges/<%= challenge._id %>/participate/<%= currentUser._id %>" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                     <!--<input class="form-control" type='text' name='image' placeholder='enter image location'>-->

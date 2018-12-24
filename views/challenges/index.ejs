@@ -11,7 +11,7 @@
         </div>
     </header>
 
-    <div class="row text-center" style="display:flex; flex-wrap: wrap;">
+    <div class="row text-center alignRows">
         <div class='col-md-12'>
             <h3><%= message %></h3>
         </div>
@@ -19,8 +19,8 @@
         <% for(var i = 0; i < challenges.length; i++) { %>
             <div class='col-md-3 col-sm-6'>
                 <div class="thumbnail">
-                    <img style="width:100%;" src="<%= challenges[i].coverImage %>">
-                    <div style="word-wrap: break-word;" class='caption'>
+                    <img class='fullWidth' src="<%= challenges[i].coverImage %>">
+                    <div class='caption'>
                         <h4><strong><%= challenges[i].name %></strong></h4>
                     </div>
                     <p>
