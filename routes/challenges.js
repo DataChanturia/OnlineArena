@@ -309,11 +309,11 @@ router.get("/:id/showStats", function(req, res) {
                     placePoints = 10 * foundChallenge.participants.length;
                 }
                 else if (i == sortedWinners.length - 2) {
-                    placeText = "2st place";
+                    placeText = "2nd place";
                     placePoints = 9 * foundChallenge.participants.length;
                 }
                 else if (i == sortedWinners.length - 3) {
-                    placeText = "3st place";
+                    placeText = "3rd place";
                     placePoints = 8 * foundChallenge.participants.length;
                 }
                 else if (i < sortedWinners.length - 3 && i > sortedWinners.length * 0.9) {
